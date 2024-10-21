@@ -1,7 +1,7 @@
 package com.puhovin.encryption.controller
 
 import com.puhovin.encryption.dto.CaesarCipherRequest
-import com.puhovin.encryption.service.CaesarCipherService
+import com.puhovin.encryption.service.CipherService
 import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/caesar_cipher")
-class CaesarCipherController(private val caesarCipherService: CaesarCipherService) {
+class CaesarCipherController(private val caesarCipherService: CipherService) {
 
     private val logger = LoggerFactory.getLogger(CaesarCipherController::class.java)
 

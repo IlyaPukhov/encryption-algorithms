@@ -1,6 +1,6 @@
 package com.puhovin.encryption.service
 
-interface CaesarCipherService {
+interface CipherService {
 
     fun encrypt(rawMessage: String, key: Int): String
 
