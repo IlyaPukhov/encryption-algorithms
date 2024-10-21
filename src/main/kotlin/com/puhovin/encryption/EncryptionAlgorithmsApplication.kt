@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class EncryptionAlgorithmsApplication
 
 fun main(args: Array<String>) {
-	runApplication<EncryptionAlgorithmsApplication>(*args)
+    runApplication<EncryptionAlgorithmsApplication>(*args)
 }
