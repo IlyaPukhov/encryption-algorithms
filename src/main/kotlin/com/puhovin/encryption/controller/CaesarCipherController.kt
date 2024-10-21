@@ -22,6 +22,7 @@ class CaesarCipherController(private val caesarCipherService: CaesarCipherServic
         @Valid request: CaesarCipherRequest
     ): ResponseEntity<String> {
         logger.info("Received request to $action with message: ${request.message} and key: ${request.key}")
+
         return when (action.lowercase()) {
             "encode" -> ResponseEntity.ok(caesarCipherService.encrypt(request.message, request.key))
             "decode" -> ResponseEntity.ok(caesarCipherService.decrypt(request.message, request.key))
