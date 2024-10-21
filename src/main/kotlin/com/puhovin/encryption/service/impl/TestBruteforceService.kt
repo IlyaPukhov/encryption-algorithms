@@ -1,26 +1,25 @@
 package com.puhovin.encryption.service.impl
 
-import com.puhovin.encryption.service.MessageService
+import org.apache.commons.io.FileUtils
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import java.io.File
 import kotlin.system.measureTimeMillis
+import kotlin.text.Charsets.UTF_8
 
 @Service
-class TestBruteforceService(
-    private val caesarCipherService: CaesarCipherService,
-    private val messageService: MessageService
-) {
+class TestBruteforceService(private val caesarCipherService: CaesarCipherService) {
 
     private val logger = LoggerFactory.getLogger(TestBruteforceService::class.java)
 
     fun testBruteforce(): String {
-        val randomMessage = messageService.getMessage("test.bruteforce.message")
+        val randomMessage = FileUtils.readFileToString(File("src/main/resources/static/example.txt"), UTF_8)
         val randomKey = (1..32).random()
 
         val encryptedMessage = caesarCipherService.encrypt(randomMessage, randomKey)
         val bruteforceTime = measureBruteforceTime(encryptedMessage, randomMessage)
 
-        return "Сообщение: \"$randomMessage\" длиной ${randomMessage.length} символов, зашифрованное ключом '$randomKey', " +
+        return "Сообщение длиной ${randomMessage.length} символов, зашифрованное ключом '$randomKey', " +
                 "было расшифровано за $bruteforceTime мс"
     }
 
