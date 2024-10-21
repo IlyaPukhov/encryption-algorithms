@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service
 class CaesarCipherService : CipherService {
 
     private val upperAlphabet = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ"
-    private val lowerAlphabet = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя"
+    private val lowerAlphabet = upperAlphabet.lowercase()
     private val alphabetLength = upperAlphabet.length
 
     override fun encrypt(rawMessage: String, key: Int): String {
