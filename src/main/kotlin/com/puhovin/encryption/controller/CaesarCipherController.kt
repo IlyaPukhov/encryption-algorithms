@@ -2,9 +2,11 @@ package com.puhovin.encryption.controller
 
 import com.puhovin.encryption.dto.CaesarCipherRequest
 import com.puhovin.encryption.service.CipherService
+import com.puhovin.encryption.service.impl.TestBruteforceService
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -12,7 +14,10 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/caesar_cipher")
-class CaesarCipherController(private val caesarCipherService: CipherService) {
+class CaesarCipherController(
+    private val caesarCipherService: CipherService,
+    private val bruteforceService: TestBruteforceService
+) {
 
     private val logger = LoggerFactory.getLogger(CaesarCipherController::class.java)
 
@@ -29,6 +34,11 @@ class CaesarCipherController(private val caesarCipherService: CipherService) {
             else -> ResponseEntity.badRequest()
                 .body("Некорректное действие: $action. Допустимые значения: encode, decode")
         }
+    }
+
+    @GetMapping("/bruteforce")
+    fun bruteForce(): ResponseEntity<String> {
+        return ResponseEntity.ok(bruteforceService.testBruteforce())
     }
 
 }
