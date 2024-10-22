@@ -3,9 +3,9 @@ package com.puhovin.encryption.controller
 import com.puhovin.encryption.dto.CaesarCipherRequest
 import com.puhovin.encryption.service.CipherService
 import com.puhovin.encryption.service.impl.TestBruteforceService
+import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
-import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -24,20 +24,20 @@ class CaesarCipherController(
     @PostMapping("/{action}")
     fun caesarCipher(
         @PathVariable action: String,
-        @Validated request: CaesarCipherRequest
+        @Valid request: CaesarCipherRequest
     ): ResponseEntity<String> {
         logger.info("Получен запрос на $action с сообщением: ${request.message} и ключом: ${request.key}")
 
         return when (action.lowercase()) {
-            "encode" -> ResponseEntity.ok(caesarCipherService.encrypt(request.message, request.key))
-            "decode" -> ResponseEntity.ok(caesarCipherService.decrypt(request.message, request.key))
+            "encode" -> ResponseEntity.ok(caesarCipherService.encrypt(request.message!!, request.key))
+            "decode" -> ResponseEntity.ok(caesarCipherService.decrypt(request.message!!, request.key))
             else -> ResponseEntity.badRequest()
                 .body("Некорректное действие: $action. Допустимые значения: encode, decode")
         }
     }
 
-    @GetMapping("/bruteforce")
-    fun bruteForce(): ResponseEntity<String> {
+    @GetMapping("/test/bruteforce")
+    fun bruteforce(): ResponseEntity<String> {
         return ResponseEntity.ok(bruteforceService.testBruteforce())
     }
 
