@@ -14,7 +14,7 @@ import org.springframework.context.NoSuchMessageException
 import org.springframework.context.i18n.LocaleContextHolder
 
 @SpringBootTest
-class MessageServiceTest(private val messageService: MessageService) {
+class MessageServiceIT(private val messageService: MessageService) {
 
     @SpyBean
     private lateinit var messageSource: MessageSource

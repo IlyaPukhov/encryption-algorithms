@@ -2,13 +2,12 @@ package com.puhovin.encryption.service
 
 import com.puhovin.encryption.service.impl.CaesarCipherService
 import com.puhovin.encryption.service.impl.MessageServiceImpl
-import org.junit.jupiter.api.BeforeEach
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito.any
-import org.mockito.Mockito.doReturn
 import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
@@ -20,17 +19,44 @@ class CaesarCipherServiceTest {
     @InjectMocks
     private lateinit var caesarCipherService: CaesarCipherService
 
-    @BeforeEach
-    fun setUp() {
-        doReturn("ERROR").`when`(messageService).getMessage(any())
+    @Test
+    fun encrypt_keyIsSpecified_encryptMessage() {
+        val key = 3
+        val rawMessage = "Привет, мир!"
+        val expectedMessage = "Тулезх, плу!"
+
+        val encryptedMessage = caesarCipherService.encrypt(rawMessage, key)
+
+        assertThat(expectedMessage).isEqualTo(encryptedMessage)
     }
 
     @Test
-    fun encrypt() {
+    fun encrypt_keyIsNotSpecified_throwsException() {
+        val rawMessage = "Привет, мир!"
+        val key: Int? = null
+
+        assertThatThrownBy { caesarCipherService.encrypt(rawMessage, key) }
+            .isInstanceOf(IllegalArgumentException::class.java)
     }
 
     @Test
-    fun decrypt() {
+    fun decrypt_keyIsSpecified_decryptEncryptedMessage() {
+        val key = 3
+        val encryptedMessage = "Тулезх, плу!"
+
+        val decryptedMessage = caesarCipherService.decrypt(encryptedMessage, key)
+
+        val expectedMessage = "Привет, мир!"
+        assertThat(expectedMessage).isEqualTo(decryptedMessage)
+    }
+
+    @Test
+    fun decrypt_keyIsNotSpecified_throwsException() {
+        val encryptedMessage = "Усйиёх, плу!"
+        val key: Int? = null
+
+        assertThatThrownBy { caesarCipherService.encrypt(encryptedMessage, key) }
+            .isInstanceOf(IllegalArgumentException::class.java)
     }
 
 }
