@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.SpyBean
 import org.springframework.context.MessageSource
 import org.springframework.context.NoSuchMessageException
+import org.springframework.context.i18n.LocaleContextHolder
 
 @SpringBootTest
 class MessageServiceTest(private val messageService: MessageService) {
@@ -36,7 +37,7 @@ class MessageServiceTest(private val messageService: MessageService) {
         assertThatThrownBy { messageService.getMessage(messageCode) }
             .isInstanceOf(NoSuchMessageException::class.java)
             .hasMessage(
-                "No message found under code '%s' for locale 'ru_RU'.".format(messageCode)
+                "No message found under code '%s' for locale '%s'.".format(messageCode, LocaleContextHolder.getLocale())
             )
         verify(messageSource, times(1)).getMessage(eq(messageCode), any(), any())
     }
