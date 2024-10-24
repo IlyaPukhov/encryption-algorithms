@@ -1,11 +1,11 @@
 package com.puhovin.encryption.service.impl
 
-import org.apache.commons.io.FileUtils
-import org.slf4j.LoggerFactory
-import org.springframework.stereotype.Service
 import java.io.File
 import kotlin.system.measureTimeMillis
 import kotlin.text.Charsets.UTF_8
+import org.apache.commons.io.FileUtils
+import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Service
 
 @Service
 class TestBruteforceService(private val caesarCipherService: CaesarCipherService) {
@@ -23,7 +23,7 @@ class TestBruteforceService(private val caesarCipherService: CaesarCipherService
                 "было расшифровано за $bruteforceTime мс"
     }
 
-    fun measureBruteforceTime(encryptedMessage: String, targetMessage: String): Long {
+    private fun measureBruteforceTime(encryptedMessage: String, targetMessage: String): Long {
         return measureTimeMillis {
             for (key in 1..32) {
                 val decryptedMessage = caesarCipherService.decrypt(encryptedMessage, key)
