@@ -1,8 +1,9 @@
 package com.puhovin.encryption.controller
 
+import com.puhovin.encryption.dto.BruteforceResult
 import com.puhovin.encryption.dto.CaesarCipherRequest
 import com.puhovin.encryption.service.CipherService
-import com.puhovin.encryption.service.impl.TestBruteforceService
+import com.puhovin.encryption.service.impl.BruteforceService
 import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
@@ -10,13 +11,14 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/caesar_cipher")
 class CaesarCipherController(
     private val caesarCipherService: CipherService,
-    private val bruteforceService: TestBruteforceService
+    private val bruteforceService: BruteforceService
 ) {
 
     private val logger = LoggerFactory.getLogger(CaesarCipherController::class.java)
@@ -36,9 +38,18 @@ class CaesarCipherController(
         }
     }
 
-    @GetMapping("/test/bruteforce")
-    fun bruteforce(): ResponseEntity<String> {
-        return ResponseEntity.ok(bruteforceService.testBruteforce())
+    @GetMapping("/bruteforce")
+    fun bruteforce(
+        @RequestParam(required = false) targetMessage: String?,
+        @RequestParam(required = false, defaultValue = "true") isDefault: Boolean
+    ): ResponseEntity<BruteforceResult> {
+        val result = if (isDefault) {
+            bruteforceService.bruteforce()
+        } else  {
+            bruteforceService.bruteforce(targetMessage!!)
+        }
+
+        return ResponseEntity.ok(result)
     }
 
 }
