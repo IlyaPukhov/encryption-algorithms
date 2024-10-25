@@ -1,6 +1,6 @@
 package com.puhovin.encryption.controller.advice
 
-import com.puhovin.encryption.service.MessageService
+import com.puhovin.encryption.util.MessageService
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode

@@ -1,7 +1,7 @@
 package com.puhovin.encryption.service
 
 import com.puhovin.encryption.service.impl.CaesarCipherService
-import com.puhovin.encryption.service.impl.MessageServiceImpl
+import com.puhovin.encryption.util.MessageService
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
@@ -14,7 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 class CaesarCipherServiceTest {
 
     @Mock
-    private lateinit var messageService: MessageServiceImpl
+    private lateinit var messageService: MessageService
 
     @InjectMocks
     private lateinit var caesarCipherService: CaesarCipherService
@@ -25,7 +25,7 @@ class CaesarCipherServiceTest {
         val rawMessage = "Привет, мир!"
         val expectedMessage = "Тулезх, плу!"
 
-        val encryptedMessage = caesarCipherService.encrypt(rawMessage, key)
+        val encryptedMessage = caesarCipherService.encrypt(rawMessage, key.toString())
 
         assertThat(expectedMessage).isEqualTo(encryptedMessage)
     }
@@ -35,7 +35,7 @@ class CaesarCipherServiceTest {
         val rawMessage = "Привет, мир!"
         val key: Int? = null
 
-        assertThatThrownBy { caesarCipherService.encrypt(rawMessage, key) }
+        assertThatThrownBy { caesarCipherService.encrypt(rawMessage, key.toString()) }
             .isInstanceOf(IllegalArgumentException::class.java)
     }
 
@@ -44,7 +44,7 @@ class CaesarCipherServiceTest {
         val key = 3
         val encryptedMessage = "Тулезх, плу!"
 
-        val decryptedMessage = caesarCipherService.decrypt(encryptedMessage, key)
+        val decryptedMessage = caesarCipherService.decrypt(encryptedMessage, key.toString())
 
         val expectedMessage = "Привет, мир!"
         assertThat(expectedMessage).isEqualTo(decryptedMessage)
@@ -52,10 +52,10 @@ class CaesarCipherServiceTest {
 
     @Test
     fun decrypt_keyIsNotSpecified_throwsException() {
-        val encryptedMessage = "Усйиёх, плу!"
+        val encryptedMessage = "Тулезх, плу!"
         val key: Int? = null
 
-        assertThatThrownBy { caesarCipherService.encrypt(encryptedMessage, key) }
+        assertThatThrownBy { caesarCipherService.encrypt(encryptedMessage, key.toString()) }
             .isInstanceOf(IllegalArgumentException::class.java)
     }
 

@@ -1,7 +1,7 @@
 package com.puhovin.encryption.service.impl
 
 import com.puhovin.encryption.service.CipherService
-import com.puhovin.encryption.service.MessageService
+import com.puhovin.encryption.util.MessageService
 import org.springframework.stereotype.Service
 
 @Service
@@ -11,14 +11,14 @@ class CaesarCipherService(private val messageService: MessageService) : CipherSe
     private val lowerAlphabet = upperAlphabet.lowercase()
     private val alphabetLength = upperAlphabet.length
 
-    override fun encrypt(rawMessage: String, key: Int?): String {
+    override fun encrypt(rawMessage: String, key: String?): String {
         key ?: throw IllegalArgumentException(messageService.getMessage("error.caesar-encrypt.key.is.required"))
-        return processMessage(rawMessage, key)
+        return processMessage(rawMessage, key.toInt())
     }
 
-    override fun decrypt(encryptedMessage: String, key: Int?): String {
+    override fun decrypt(encryptedMessage: String, key: String?): String {
         key ?: throw IllegalArgumentException(messageService.getMessage("error.caesar-decrypt.key.is.required"))
-        return processMessage(encryptedMessage, -key)
+        return processMessage(encryptedMessage, -key.toInt())
     }
 
     private fun processMessage(message: String, key: Int): String {

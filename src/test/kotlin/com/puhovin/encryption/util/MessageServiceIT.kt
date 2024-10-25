@@ -1,4 +1,4 @@
-package com.puhovin.encryption.service
+package com.puhovin.encryption.util
 
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy

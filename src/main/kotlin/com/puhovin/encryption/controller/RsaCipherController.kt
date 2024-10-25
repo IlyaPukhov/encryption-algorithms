@@ -1,7 +1,8 @@
 package com.puhovin.encryption.controller
 
+import com.puhovin.encryption.dto.RsaCipherRequest
 import com.puhovin.encryption.service.CipherService
-import jakarta.validation.constraints.NotNull
+import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
@@ -18,13 +19,13 @@ class RsaCipherController(private val rsaCipherService: CipherService) {
     @PostMapping("/{action}")
     fun rsaCipher(
         @PathVariable action: String,
-        @NotNull message: String
+        @Valid request: RsaCipherRequest
     ): ResponseEntity<String> {
-        logger.info("Получен запрос на $action с сообщением: $message")
+        logger.info("Получен запрос на $action с сообщением: ${request.message} и ключом: ${request.key}")
 
         return when (action.lowercase()) {
-            "encode" -> ResponseEntity.ok(rsaCipherService.encrypt(message))
-            "decode" -> ResponseEntity.ok(rsaCipherService.decrypt(message))
+            "encode" -> ResponseEntity.ok(rsaCipherService.encrypt(request.message!!, request.key))
+            "decode" -> ResponseEntity.ok(rsaCipherService.decrypt(request.message!!, request.key))
             else -> ResponseEntity.badRequest()
                 .body("Некорректное действие: $action. Допустимые значения: encode, decode")
         }

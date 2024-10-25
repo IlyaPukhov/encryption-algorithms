@@ -1,8 +1,0 @@
-spring:
-  application:
-    name: encryption-algorithms
-  main:
-    banner-mode: off
-
-server:
-  port: 8080

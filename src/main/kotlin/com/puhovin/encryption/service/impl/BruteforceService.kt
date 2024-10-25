@@ -21,7 +21,7 @@ class BruteforceService(private val caesarCipherService: CaesarCipherService) {
     fun bruteforce(message: String): BruteforceResult {
         val randomKey = (1..32).random()
 
-        val encryptedMessage = caesarCipherService.encrypt(message, randomKey)
+        val encryptedMessage = caesarCipherService.encrypt(message, randomKey.toString())
         val bruteforceTime = measureBruteforceTime(encryptedMessage, message)
 
         return BruteforceResult(message, randomKey, bruteforceTime, encryptedMessage)
@@ -30,7 +30,7 @@ class BruteforceService(private val caesarCipherService: CaesarCipherService) {
     private fun measureBruteforceTime(encryptedMessage: String, targetMessage: String): Long {
         return measureTimeMillis {
             for (key in 1..32) {
-                val decryptedMessage = caesarCipherService.decrypt(encryptedMessage, key)
+                val decryptedMessage = caesarCipherService.decrypt(encryptedMessage, key.toString())
                 logger.info("Ключ: $key, Сообщение: $decryptedMessage")
                 if (decryptedMessage == targetMessage) {
                     logger.info("Расшифровка завершение!")

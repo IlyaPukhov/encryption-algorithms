@@ -31,8 +31,8 @@ class CaesarCipherController(
         logger.info("Получен запрос на $action с сообщением: ${request.message} и ключом: ${request.key}")
 
         return when (action.lowercase()) {
-            "encode" -> ResponseEntity.ok(caesarCipherService.encrypt(request.message!!, request.key))
-            "decode" -> ResponseEntity.ok(caesarCipherService.decrypt(request.message!!, request.key))
+            "encode" -> ResponseEntity.ok(caesarCipherService.encrypt(request.message!!, request.key.toString()))
+            "decode" -> ResponseEntity.ok(caesarCipherService.decrypt(request.message!!, request.key.toString()))
             else -> ResponseEntity.badRequest()
                 .body("Некорректное действие: $action. Допустимые значения: encode, decode")
         }
