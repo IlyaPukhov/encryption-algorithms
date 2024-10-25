@@ -4,9 +4,13 @@ import java.util.Base64
 import org.springframework.stereotype.Service
 
 @Service
-class KeyDecoder(private val messageService: MessageService) {
+class KeyEncoderDecoder(private val messageService: MessageService) {
 
-    fun getKeyFromBase64(base64String: String?): Pair<Int, Int> {
+    fun encodeKey(key: Pair<Int, Int>): String {
+        return Base64.getEncoder().encodeToString("${key.first},${key.second}".toByteArray())
+    }
+
+    fun decodeKey(base64String: String?): Pair<Int, Int> {
         val decodedText = Base64.getDecoder().decode(base64String).toString()
 
         if (!isValidFormat(decodedText)) {

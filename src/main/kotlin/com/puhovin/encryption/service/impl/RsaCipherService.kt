@@ -1,12 +1,12 @@
 package com.puhovin.encryption.service.impl
 
 import com.puhovin.encryption.service.CipherService
-import com.puhovin.encryption.util.KeyDecoder
+import com.puhovin.encryption.util.KeyEncoderDecoder
 import kotlin.math.pow
 import org.springframework.stereotype.Service
 
 @Service
-class RsaCipherService(private val keyDecoder: KeyDecoder) : CipherService {
+class RsaCipherService(private val keyEncoderDecoder: KeyEncoderDecoder) : CipherService {
 
     private companion object {
         private const val SPECIAL_CHARACTERS = " ,.!?;:'\"()[]{}<>"
@@ -14,7 +14,7 @@ class RsaCipherService(private val keyDecoder: KeyDecoder) : CipherService {
     }
 
     override fun encrypt(rawMessage: String, key: String?): String {
-        val (e, n) = keyDecoder.getKeyFromBase64(key)
+        val (e, n) = keyEncoderDecoder.decodeKey(key)
         val encryptedMessage = StringBuilder()
 
         for (char in rawMessage) {
@@ -42,7 +42,7 @@ class RsaCipherService(private val keyDecoder: KeyDecoder) : CipherService {
     }
 
     override fun decrypt(encryptedMessage: String, key: String?): String {
-        val (d, n) = keyDecoder.getKeyFromBase64(key)
+        val (d, n) = keyEncoderDecoder.decodeKey(key)
         val decryptedMessage = StringBuilder()
 
         val encryptedParts = encryptedMessage.split(DELIMITER)

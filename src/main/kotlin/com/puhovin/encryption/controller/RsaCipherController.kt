@@ -2,9 +2,11 @@ package com.puhovin.encryption.controller
 
 import com.puhovin.encryption.dto.RsaCipherRequest
 import com.puhovin.encryption.service.CipherService
+import com.puhovin.encryption.service.impl.RsaKeyGeneratorService
 import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -12,9 +14,22 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/rsa_cipher")
-class RsaCipherController(private val rsaCipherService: CipherService) {
+class RsaCipherController(
+    private val rsaCipherService: CipherService,
+    private val keyGeneratorService: RsaKeyGeneratorService
+) {
 
     private val logger = LoggerFactory.getLogger(RsaCipherController::class.java)
+
+    @GetMapping("/open_key")
+    fun publicKey(): ResponseEntity<String> {
+        return ResponseEntity.ok(keyGeneratorService.generatePublicKey())
+    }
+
+    @GetMapping("/close_key")
+    fun privateKey(): ResponseEntity<String> {
+        return ResponseEntity.ok(keyGeneratorService.generatePrivateKey())
+    }
 
     @PostMapping("/{action}")
     fun rsaCipher(
