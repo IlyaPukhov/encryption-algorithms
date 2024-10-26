@@ -10,11 +10,11 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
-class BruteforceService(
+class BruteforceCaesarCipherService(
     private val caesarCipherService: CaesarCipherService
 ) {
 
-    private val logger = LoggerFactory.getLogger(BruteforceService::class.java)
+    private val logger = LoggerFactory.getLogger(BruteforceCaesarCipherService::class.java)
 
     fun bruteforce(): BruteforceResult {
         val defaultMessage = FileUtils.readFileToString(File("src/main/resources/static/example.txt"), UTF_8)
