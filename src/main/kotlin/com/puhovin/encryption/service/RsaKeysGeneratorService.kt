@@ -11,12 +11,12 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
 @Service
-class RsaKeyGeneratorService(
+class RsaKeysGeneratorService(
     private val keyEncoder: KeyEncoderDecoder,
     private val messageService: MessageService,
 ) {
 
-    private val logger = LoggerFactory.getLogger(RsaKeyGeneratorService::class.java)
+    private val logger = LoggerFactory.getLogger(RsaKeysGeneratorService::class.java)
 
     @Value("\${encrypt.rsa.p}")
     private var p: Long = 0

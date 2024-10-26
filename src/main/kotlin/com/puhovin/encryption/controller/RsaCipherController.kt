@@ -2,7 +2,7 @@ package com.puhovin.encryption.controller
 
 import com.puhovin.encryption.dto.RsaCipherRequest
 import com.puhovin.encryption.service.CipherService
-import com.puhovin.encryption.service.RsaKeyGeneratorService
+import com.puhovin.encryption.service.RsaKeysGeneratorService
 import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/rsa_cipher")
 class RsaCipherController(
     private val rsaCipherService: CipherService,
-    private val keyGeneratorService: RsaKeyGeneratorService
+    private val keyGeneratorService: RsaKeysGeneratorService
 ) {
 
     private val logger = LoggerFactory.getLogger(RsaCipherController::class.java)
