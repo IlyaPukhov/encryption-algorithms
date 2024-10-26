@@ -14,12 +14,12 @@ class CaesarCipherService(
     private val alphabetLength = upperAlphabet.length
 
     override fun encrypt(rawMessage: String, key: String?): String {
-        key ?: throw IllegalArgumentException(messageService.getMessage("error.caesar-encrypt.key.is.required"))
+        key ?: throw IllegalArgumentException(messageService.getMessage("error.encrypt.key.is.required"))
         return processMessage(rawMessage, key.toInt())
     }
 
     override fun decrypt(encryptedMessage: String, key: String?): String {
-        key ?: throw IllegalArgumentException(messageService.getMessage("error.caesar-decrypt.key.is.required"))
+        key ?: throw IllegalArgumentException(messageService.getMessage("error.decrypt.key.is.required"))
         return processMessage(encryptedMessage, -key.toInt())
     }
 

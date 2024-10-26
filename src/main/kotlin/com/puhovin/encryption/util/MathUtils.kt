@@ -42,11 +42,11 @@ object MathUtils {
     }
 
     // Алгоритм возведения в степень по модулю
-    fun modularExponentiation(base: Long, degree: Long, mod: Long): Long {
+    fun modularExponentiation(base: Long, exp: Long, mod: Long): Long {
         val a0 = base % mod
         var result = a0
 
-        val binaryRepresentation = degree.toUInt().toString(radix = 2)
+        val binaryRepresentation = exp.toUInt().toString(radix = 2)
         val bPayload = binaryRepresentation.drop(1)
 
         for (bi in bPayload) {

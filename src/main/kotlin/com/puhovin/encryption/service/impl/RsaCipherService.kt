@@ -3,11 +3,13 @@ package com.puhovin.encryption.service.impl
 import com.puhovin.encryption.service.CipherService
 import com.puhovin.encryption.util.KeyEncoderDecoder
 import com.puhovin.encryption.util.MathUtils
+import com.puhovin.encryption.util.MessageService
 import org.springframework.stereotype.Service
 
 @Service
 class RsaCipherService(
-    private val keyDecoder: KeyEncoderDecoder
+    private val keyDecoder: KeyEncoderDecoder,
+    private val messageService: MessageService
 ) : CipherService {
 
     private companion object {
@@ -16,6 +18,8 @@ class RsaCipherService(
     }
 
     override fun encrypt(rawMessage: String, key: String?): String {
+        key ?: throw IllegalArgumentException(messageService.getMessage("error.encrypt.key.is.required"))
+
         val (e, n) = keyDecoder.decodeKey(key)
         val encryptedMessage = StringBuilder()
 
@@ -45,6 +49,8 @@ class RsaCipherService(
     }
 
     override fun decrypt(encryptedMessage: String, key: String?): String {
+        key ?: throw IllegalArgumentException(messageService.getMessage("error.decrypt.key.is.required"))
+
         val (d, n) = keyDecoder.decodeKey(key)
         val decryptedMessage = StringBuilder()
 
