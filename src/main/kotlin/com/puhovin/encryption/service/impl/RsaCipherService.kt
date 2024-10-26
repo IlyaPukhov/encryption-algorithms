@@ -2,6 +2,7 @@ package com.puhovin.encryption.service.impl
 
 import com.puhovin.encryption.service.CipherService
 import com.puhovin.encryption.util.KeyEncoderDecoder
+import com.puhovin.encryption.util.MathUtils
 import org.springframework.stereotype.Service
 
 @Service
@@ -36,11 +37,11 @@ class RsaCipherService(
 
     fun encryptCharacter(char: Char, e: Long, n: Long): Long? {
         val m = when (char) {
-            in 'А'..'Я' -> (char.code - 'А'.code + 1).toDouble()
-            in 'а'..'я' -> (char.code - 'а'.code + 34).toDouble()
-            else -> null
+            in 'А'..'Я' -> (char.code - 'А'.code + 1)
+            in 'а'..'я' -> (char.code - 'а'.code + 34)
+            else -> return null
         }
-        return null // TODO c=m^e mod n
+        return MathUtils.modularExponentiation(m.toLong(), e, n)
     }
 
     override fun decrypt(encryptedMessage: String, key: String?): String {
@@ -63,12 +64,12 @@ class RsaCipherService(
     }
 
     fun decryptCharacter(c: Long, d: Long, n: Long): Char? {
-        val m = 1.toInt() // TODO m=c^d mod n
+        val m = MathUtils.modularExponentiation(c, d, n)
         return when (m) {
-            in 1..33 -> (m + 'А'.code - 1).toChar()
-            in 34..66 -> (m + 'а'.code - 34).toChar()
+            in 1..33 -> (m + 'А'.code - 1)
+            in 34..66 -> (m + 'а'.code - 34)
             else -> null
-        }
+        }?.toInt()?.toChar()
     }
 
 }

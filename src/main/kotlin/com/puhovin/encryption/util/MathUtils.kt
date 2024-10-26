@@ -2,7 +2,7 @@ package com.puhovin.encryption.util
 
 object MathUtils {
 
-    // Функция для нахождения НОД
+    // Алгоритм нахождения наибольшего общего делителя
     fun gcd(a: Long, b: Long): Long {
         var x = a
         var y = b
@@ -15,7 +15,7 @@ object MathUtils {
         return x
     }
 
-    // Функция для нахождения мультипликативной обратной по модулю
+    // Алгоритм нахождения мультипликативной обратной по модулю
     fun modularInverse(e: Long, phi: Long): Long {
         var m0 = phi
         var y = 0L
@@ -39,6 +39,25 @@ object MathUtils {
         if (x < 0) x += phi
 
         return x
+    }
+
+    // Алгоритм возведения в степень по модулю
+    fun modularExponentiation(base: Long, degree: Long, mod: Long): Long {
+        val a0 = base % mod
+        var result = a0
+
+        val binaryRepresentation = degree.toUInt().toString(radix = 2)
+        val bPayload = binaryRepresentation.drop(1)
+
+        for (bi in bPayload) {
+            result = if (bi == '1') {
+                (result * result * a0) % mod
+            } else {
+                (result * result) % mod
+            }
+        }
+
+        return result
     }
 
 }
