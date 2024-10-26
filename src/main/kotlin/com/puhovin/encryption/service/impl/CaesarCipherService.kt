@@ -11,9 +11,11 @@ import org.springframework.stereotype.Service
 @Service
 class CaesarCipherService : CipherService {
 
-    private val upperAlphabet = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ"
-    private val lowerAlphabet = upperAlphabet.lowercase()
-    private val alphabetLength = upperAlphabet.length
+    private companion object {
+        const val UPPER_ALPHABET = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ"
+        const val ALPHABET_LENGTH = UPPER_ALPHABET.length
+        val LOWER_ALPHABET = UPPER_ALPHABET.lowercase()
+    }
 
     /**
      * Шифрует сообщение методом Цезаря.
@@ -49,8 +51,8 @@ class CaesarCipherService : CipherService {
 
         for (char in message) {
             when (char) {
-                in upperAlphabet -> shiftedMessage.append(shiftChar(char, key, upperAlphabet))
-                in lowerAlphabet -> shiftedMessage.append(shiftChar(char, key, lowerAlphabet))
+                in UPPER_ALPHABET -> shiftedMessage.append(shiftChar(char, key, UPPER_ALPHABET))
+                in LOWER_ALPHABET -> shiftedMessage.append(shiftChar(char, key, LOWER_ALPHABET))
                 else -> shiftedMessage.append(char)
             }
         }
@@ -67,7 +69,7 @@ class CaesarCipherService : CipherService {
      */
     private fun shiftChar(char: Char, key: Int, alphabet: String): Char {
         val index = alphabet.indexOf(char)
-        val shiftedIndex = (index + key + alphabetLength) % alphabetLength
+        val shiftedIndex = (index + key + ALPHABET_LENGTH) % ALPHABET_LENGTH
 
         return alphabet[shiftedIndex]
     }

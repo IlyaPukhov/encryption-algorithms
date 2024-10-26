@@ -33,8 +33,7 @@ object MathUtils {
      * @return Мультипликативная обратная d по модулю phi
      */
     fun modularInverse(e: Long, phi: Long): Long {
-        if (e == 0L || (phi == 1L && e != 1L)) return 0
-        if (phi == 1L) return 1
+        if (e <= 0 || phi <= 1) throw IllegalArgumentException("e и φ должны быть больше нуля!")
 
         var k = 1L
         var expression: Long

@@ -1,6 +1,7 @@
 package com.puhovin.encryption.util
 
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 
 class MathUtilsTest {
@@ -20,12 +21,21 @@ class MathUtilsTest {
     }
 
     @Test
-    fun modularInverse() {
+    fun modularInverse_validInput_returnsD() {
         val expectedD = 99593L
 
         val result = MathUtils.modularInverse(E, PHI)
 
         assertThat(result).isEqualTo(expectedD)
+    }
+
+    @Test
+    fun modularInverse_invalidInput_throwsException() {
+        val invalidPhi = 1L
+
+        assertThatThrownBy { MathUtils.modularInverse(E, invalidPhi) }
+            .isInstanceOf(IllegalArgumentException::class.java)
+            .hasMessage("e и φ должны быть больше нуля!")
     }
 
     @Test

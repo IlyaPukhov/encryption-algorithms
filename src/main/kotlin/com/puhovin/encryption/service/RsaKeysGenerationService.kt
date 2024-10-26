@@ -5,8 +5,6 @@ import com.puhovin.encryption.util.MathUtils
 import com.puhovin.encryption.util.MessageService
 import jakarta.annotation.PostConstruct
 import kotlin.properties.Delegates
-import kotlin.system.measureTimeMillis
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
@@ -20,8 +18,6 @@ class RsaKeysGenerationService(
     private val keyEncoder: KeyEncoderDecoder,
     private val messageService: MessageService,
 ) {
-
-    private val logger = LoggerFactory.getLogger(RsaKeysGenerationService::class.java)
 
     companion object {
         const val START_E = 65537L
@@ -49,13 +45,10 @@ class RsaKeysGenerationService(
             throw IllegalStateException(messageService.getMessage("error.rsa-encrypt.pq-is-not-initialized"))
         }
 
-        val duration = measureTimeMillis {
-            n = p * q
-            val phi = (p - 1) * (q - 1)
-            e = findPublicExponent(phi)
-            d = calculatePrivateD(e, phi)
-        }
-        logger.info("Время вычисления ключа: $duration мс")
+        n = p * q
+        val phi = (p - 1) * (q - 1)
+        e = findPublicExponent(phi)
+        d = calculatePrivateD(e, phi)
     }
 
     /**
