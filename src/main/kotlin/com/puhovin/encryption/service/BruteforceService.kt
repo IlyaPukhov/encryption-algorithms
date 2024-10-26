@@ -1,6 +1,7 @@
-package com.puhovin.encryption.service.impl
+package com.puhovin.encryption.service
 
 import com.puhovin.encryption.dto.BruteforceResult
+import com.puhovin.encryption.service.impl.CaesarCipherService
 import java.io.File
 import kotlin.system.measureTimeMillis
 import kotlin.text.Charsets.UTF_8
@@ -9,7 +10,9 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
-class BruteforceService(private val caesarCipherService: CaesarCipherService) {
+class BruteforceService(
+    private val caesarCipherService: CaesarCipherService
+) {
 
     private val logger = LoggerFactory.getLogger(BruteforceService::class.java)
 

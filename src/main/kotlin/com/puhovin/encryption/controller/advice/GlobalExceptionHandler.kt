@@ -13,7 +13,9 @@ import org.springframework.web.context.request.WebRequest
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 
 @ControllerAdvice
-class GlobalExceptionHandler(private val messageService: MessageService) : ResponseEntityExceptionHandler() {
+class GlobalExceptionHandler(
+    private val messageService: MessageService
+) : ResponseEntityExceptionHandler() {
 
     override fun handleMethodArgumentNotValid(
         ex: MethodArgumentNotValidException,

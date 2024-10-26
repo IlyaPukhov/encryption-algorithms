@@ -4,20 +4,22 @@ import java.util.Base64
 import org.springframework.stereotype.Service
 
 @Service
-class KeyEncoderDecoder(private val messageService: MessageService) {
+class KeyEncoderDecoder(
+    private val messageService: MessageService
+) {
 
-    fun encodeKey(key: Pair<Int, Int>): String {
+    fun encodeKey(key: Pair<Long, Long>): String {
         return Base64.getEncoder().encodeToString("${key.first},${key.second}".toByteArray())
     }
 
-    fun decodeKey(base64String: String?): Pair<Int, Int> {
+    fun decodeKey(base64String: String?): Pair<Long, Long> {
         val decodedText = Base64.getDecoder().decode(base64String).toString()
 
         if (!isValidFormat(decodedText)) {
             throw IllegalArgumentException(messageService.getMessage("error.rsa-encrypt.key.is.invalid"))
         }
 
-        val (first, second) = decodedText.split(",").map { it.toInt() }
+        val (first, second) = decodedText.split(",").map { it.toLong() }
         return Pair(first, second)
     }
 

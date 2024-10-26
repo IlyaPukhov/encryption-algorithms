@@ -2,11 +2,12 @@ package com.puhovin.encryption.service.impl
 
 import com.puhovin.encryption.service.CipherService
 import com.puhovin.encryption.util.KeyEncoderDecoder
-import kotlin.math.pow
 import org.springframework.stereotype.Service
 
 @Service
-class RsaCipherService(private val keyEncoderDecoder: KeyEncoderDecoder) : CipherService {
+class RsaCipherService(
+    private val keyDecoder: KeyEncoderDecoder
+) : CipherService {
 
     private companion object {
         private const val SPECIAL_CHARACTERS = " ,.!?;:'\"()[]{}<>"
@@ -14,7 +15,7 @@ class RsaCipherService(private val keyEncoderDecoder: KeyEncoderDecoder) : Ciphe
     }
 
     override fun encrypt(rawMessage: String, key: String?): String {
-        val (e, n) = keyEncoderDecoder.decodeKey(key)
+        val (e, n) = keyDecoder.decodeKey(key)
         val encryptedMessage = StringBuilder()
 
         for (char in rawMessage) {
@@ -33,16 +34,17 @@ class RsaCipherService(private val keyEncoderDecoder: KeyEncoderDecoder) : Ciphe
         return encryptedMessage.toString()
     }
 
-    fun encryptCharacter(char: Char, e: Int, n: Int): Int? {
-        return when (char) {
-            in 'А'..'Я' -> (char.code - 'А'.code + 1).toDouble().pow(e).toInt() % n
-            in 'а'..'я' -> (char.code - 'а'.code + 34).toDouble().pow(e).toInt() % n
+    fun encryptCharacter(char: Char, e: Long, n: Long): Long? {
+        val m = when (char) {
+            in 'А'..'Я' -> (char.code - 'А'.code + 1).toDouble()
+            in 'а'..'я' -> (char.code - 'а'.code + 34).toDouble()
             else -> null
         }
+        return null // TODO c=m^e mod n
     }
 
     override fun decrypt(encryptedMessage: String, key: String?): String {
-        val (d, n) = keyEncoderDecoder.decodeKey(key)
+        val (d, n) = keyDecoder.decodeKey(key)
         val decryptedMessage = StringBuilder()
 
         val encryptedParts = encryptedMessage.split(DELIMITER)
@@ -52,7 +54,7 @@ class RsaCipherService(private val keyEncoderDecoder: KeyEncoderDecoder) : Ciphe
 
             if (part in SPECIAL_CHARACTERS) decryptedMessage.append(part)
 
-            decryptCharacter(part.toInt(), d, n)?.let {
+            decryptCharacter(part.toLong(), d, n)?.let {
                 decryptedMessage.append(it)
             }
         }
@@ -60,11 +62,11 @@ class RsaCipherService(private val keyEncoderDecoder: KeyEncoderDecoder) : Ciphe
         return decryptedMessage.toString()
     }
 
-    fun decryptCharacter(encryptedValue: Int, d: Int, n: Int): Char? {
-        val decryptedInt = (encryptedValue.toDouble().pow(d).toInt() % n)
-        return when (decryptedInt) {
-            in 1..33 -> (decryptedInt + 'А'.code - 1).toChar()
-            in 34..66 -> (decryptedInt + 'а'.code - 34).toChar()
+    fun decryptCharacter(c: Long, d: Long, n: Long): Char? {
+        val m = 1.toInt() // TODO m=c^d mod n
+        return when (m) {
+            in 1..33 -> (m + 'А'.code - 1).toChar()
+            in 34..66 -> (m + 'а'.code - 34).toChar()
             else -> null
         }
     }

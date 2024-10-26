@@ -3,7 +3,7 @@ package com.puhovin.encryption.controller
 import com.puhovin.encryption.dto.BruteforceResult
 import com.puhovin.encryption.dto.CaesarCipherRequest
 import com.puhovin.encryption.service.CipherService
-import com.puhovin.encryption.service.impl.BruteforceService
+import com.puhovin.encryption.service.BruteforceService
 import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity

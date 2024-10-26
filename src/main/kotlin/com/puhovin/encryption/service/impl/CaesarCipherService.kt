@@ -5,7 +5,9 @@ import com.puhovin.encryption.util.MessageService
 import org.springframework.stereotype.Service
 
 @Service
-class CaesarCipherService(private val messageService: MessageService) : CipherService {
+class CaesarCipherService(
+    private val messageService: MessageService
+) : CipherService {
 
     private val upperAlphabet = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ"
     private val lowerAlphabet = upperAlphabet.lowercase()

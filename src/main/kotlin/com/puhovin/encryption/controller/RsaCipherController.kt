@@ -2,7 +2,7 @@ package com.puhovin.encryption.controller
 
 import com.puhovin.encryption.dto.RsaCipherRequest
 import com.puhovin.encryption.service.CipherService
-import com.puhovin.encryption.service.impl.RsaKeyGeneratorService
+import com.puhovin.encryption.service.RsaKeyGeneratorService
 import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
@@ -23,12 +23,12 @@ class RsaCipherController(
 
     @GetMapping("/open_key")
     fun publicKey(): ResponseEntity<String> {
-        return ResponseEntity.ok(keyGeneratorService.generatePublicKey())
+        return ResponseEntity.ok(keyGeneratorService.getPublicKey())
     }
 
     @GetMapping("/close_key")
     fun privateKey(): ResponseEntity<String> {
-        return ResponseEntity.ok(keyGeneratorService.generatePrivateKey())
+        return ResponseEntity.ok(keyGeneratorService.getPrivateKey())
     }
 
     @PostMapping("/{action}")
