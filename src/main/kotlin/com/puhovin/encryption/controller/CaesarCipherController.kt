@@ -2,8 +2,8 @@ package com.puhovin.encryption.controller
 
 import com.puhovin.encryption.dto.BruteforceResult
 import com.puhovin.encryption.dto.CaesarCipherRequest
-import com.puhovin.encryption.service.CipherService
 import com.puhovin.encryption.service.BruteforceCaesarCipherService
+import com.puhovin.encryption.service.CipherService
 import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
+/**
+ * REST-контроллер для шифрования и дешифрования методом Цезаря.
+ */
 @RestController
 @RequestMapping("/caesar_cipher")
 class CaesarCipherController(
@@ -23,6 +26,13 @@ class CaesarCipherController(
 
     private val logger = LoggerFactory.getLogger(CaesarCipherController::class.java)
 
+    /**
+     * Обрабатывает POST-запросы на шифрование и дешифрование методом Цезаря.
+     *
+     * @param action тип операции (encode или decode)
+     * @param request запрос, содержащий сообщение и ключ
+     * @return Результат операции в виде строки
+     */
     @PostMapping("/{action}")
     fun caesarCipher(
         @PathVariable action: String,
@@ -38,6 +48,13 @@ class CaesarCipherController(
         }
     }
 
+    /**
+     * Обрабатывает GET-запросы на дешифрование перебором.
+     *
+     * @param targetMessage целевое сообщение для дешифрования (необязательно)
+     * @param isDefault использовать ли сообщение по умолчанию (необязательно, по умолчанию true)
+     * @return [ResponseEntity], содержащий результат дешифрования [BruteforceResult]
+     */
     @GetMapping("/bruteforce")
     fun bruteforce(
         @RequestParam(required = false) targetMessage: String?,
@@ -45,7 +62,7 @@ class CaesarCipherController(
     ): ResponseEntity<BruteforceResult> {
         val result = if (isDefault) {
             bruteforceService.bruteforce()
-        } else  {
+        } else {
             bruteforceService.bruteforce(targetMessage!!)
         }
 

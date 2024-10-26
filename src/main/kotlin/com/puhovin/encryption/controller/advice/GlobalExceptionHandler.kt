@@ -12,11 +12,22 @@ import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.context.request.WebRequest
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 
+/**
+ * Глобальный обработчик исключений, который перехватывает и обрабатывает исключения валидации запросов.
+ */
 @ControllerAdvice
-class GlobalExceptionHandler(
-    private val messageService: MessageService
-) : ResponseEntityExceptionHandler() {
+class GlobalExceptionHandler(private val messageService: MessageService) : ResponseEntityExceptionHandler() {
 
+    /**
+     * Обрабатывает исключения валидации аргументов метода, создавая объект ProblemDetail
+     * со списком сообщений об ошибках и возвращая его в качестве ответа.
+     *
+     * @param ex исключение валидации аргумента метода
+     * @param headers заголовки HTTP
+     * @param status код состояния HTTP
+     * @param request веб-запрос
+     * @return Ответ с объектом [ProblemDetail]
+     */
     override fun handleMethodArgumentNotValid(
         ex: MethodArgumentNotValidException,
         headers: HttpHeaders,

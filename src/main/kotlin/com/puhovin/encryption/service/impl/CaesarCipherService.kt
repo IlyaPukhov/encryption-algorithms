@@ -1,28 +1,49 @@
 package com.puhovin.encryption.service.impl
 
 import com.puhovin.encryption.service.CipherService
-import com.puhovin.encryption.util.MessageService
 import org.springframework.stereotype.Service
 
+/**
+ * Сервис, реализующий шифрование и дешифрование методом Цезаря.
+ *
+ * Этот сервис позволяет шифровать и дешифровать сообщения, используя ключ, заданный пользователем.
+ */
 @Service
-class CaesarCipherService(
-    private val messageService: MessageService
-) : CipherService {
+class CaesarCipherService : CipherService {
 
     private val upperAlphabet = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ"
     private val lowerAlphabet = upperAlphabet.lowercase()
     private val alphabetLength = upperAlphabet.length
 
-    override fun encrypt(rawMessage: String, key: String?): String {
-        key ?: throw IllegalArgumentException(messageService.getMessage("error.encrypt.key.is.required"))
+    /**
+     * Шифрует сообщение методом Цезаря.
+     *
+     * @param rawMessage исходное сообщение
+     * @param key ключ шифрования
+     * @return Зашифрованное сообщение
+     */
+    override fun encrypt(rawMessage: String, key: String): String {
         return processMessage(rawMessage, key.toInt())
     }
 
-    override fun decrypt(encryptedMessage: String, key: String?): String {
-        key ?: throw IllegalArgumentException(messageService.getMessage("error.decrypt.key.is.required"))
+    /**
+     * Дешифрует зашифрованное сообщение методом Цезаря.
+     *
+     * @param encryptedMessage зашифрованное сообщение
+     * @param key ключ дешифрования
+     * @return Дешифрованное сообщение
+     */
+    override fun decrypt(encryptedMessage: String, key: String): String {
         return processMessage(encryptedMessage, -key.toInt())
     }
 
+    /**
+     * Обрабатывает сообщение, сдвигая каждый символ на заданное количество позиций в рамках алфавита.
+     *
+     * @param message сообщение для обработки
+     * @param key ключ сдвига
+     * @return Обработанное сообщение
+     */
     private fun processMessage(message: String, key: Int): String {
         val shiftedMessage = StringBuilder()
 
@@ -36,6 +57,14 @@ class CaesarCipherService(
         return shiftedMessage.toString()
     }
 
+    /**
+     * Сдвигает символ на заданное количество позиций в алфавите.
+     *
+     * @param char символ для сдвига
+     * @param key ключ сдвига
+     * @param alphabet алфавит, в котором находится символ
+     * @return Сдвинутый символ
+     */
     fun shiftChar(char: Char, key: Int, alphabet: String): Char {
         val index = alphabet.indexOf(char)
         val shiftedIndex = (index + key + alphabetLength) % alphabetLength
