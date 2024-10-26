@@ -5,25 +5,39 @@ import org.junit.jupiter.api.Test
 
 class MathUtilsTest {
 
+    private companion object {
+        const val E = 7L
+        const val PHI = 122_760L
+    }
+
     @Test
     fun testGcd() {
-        val result = MathUtils.gcd(199L, 1003L) // todo дописать после ручных расчетов
+        val expectedGcd = 1L
 
-        assertThat(result).isEqualTo(247L)
+        val result = MathUtils.gcd(E, PHI)
+
+        assertThat(result).isEqualTo(expectedGcd)
     }
 
     @Test
     fun testModularInverse() {
-        val result = MathUtils.modularInverse(199L, 1003L) // todo дописать после ручных расчетов
+        val expectedD = 105_223L
 
-        assertThat(result).isEqualTo(247L)
+        val result = MathUtils.modularInverse(E, PHI)
+
+        assertThat(result).isEqualTo(expectedD)
     }
 
     @Test
     fun testModularExponentiation() {
-        val result = MathUtils.modularExponentiation(2L, 199L, 1003L)
+        val base = 2L
+        val exp = 199L
+        val mod = 1003L
+        val expectedResult = 247L
 
-        assertThat(result).isEqualTo(247L)
+        val result = MathUtils.modularExponentiation(base, exp, mod)
+
+        assertThat(result).isEqualTo(expectedResult)
     }
 
 }
