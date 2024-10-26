@@ -1,61 +1,51 @@
 package com.puhovin.encryption.service
 
 import com.puhovin.encryption.service.impl.CaesarCipherService
-import com.puhovin.encryption.util.MessageService
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.jupiter.MockitoExtension
 
-@ExtendWith(MockitoExtension::class)
 class CaesarCipherServiceTest {
 
-    @Mock
-    private lateinit var messageService: MessageService
+    private companion object {
+        const val RAW_MESSAGE = "Пух!"
+        const val ENCRYPTED_MESSAGE = "Тцш!"
+    }
 
-    @InjectMocks
-    private lateinit var caesarCipherService: CaesarCipherService
+    private val caesarCipherService = CaesarCipherService()
 
     @Test
     fun encrypt_keyIsSpecified_encryptMessage() {
         val key = 3
-        val rawMessage = "Привет, мир!"
-        val expectedMessage = "Тулезх, плу!"
 
-        val encryptedMessage = caesarCipherService.encrypt(rawMessage, key.toString())
+        val encryptedResult = caesarCipherService.encrypt(RAW_MESSAGE, key.toString())
 
-        assertThat(expectedMessage).isEqualTo(encryptedMessage)
+        assertThat(encryptedResult).isEqualTo(ENCRYPTED_MESSAGE)
     }
 
     @Test
     fun encrypt_keyIsNotSpecified_throwsException() {
-        val rawMessage = "Привет, мир!"
         val key: Int? = null
 
-        assertThatThrownBy { caesarCipherService.encrypt(rawMessage, key.toString()) }
+        assertThatThrownBy { caesarCipherService.encrypt(RAW_MESSAGE, key.toString()) }
             .isInstanceOf(IllegalArgumentException::class.java)
     }
 
     @Test
     fun decrypt_keyIsSpecified_decryptEncryptedMessage() {
         val key = 3
-        val encryptedMessage = "Тулезх, плу!"
+        val expectedMessage = RAW_MESSAGE
 
-        val decryptedMessage = caesarCipherService.decrypt(encryptedMessage, key.toString())
+        val decryptedResult = caesarCipherService.decrypt(ENCRYPTED_MESSAGE, key.toString())
 
-        val expectedMessage = "Привет, мир!"
-        assertThat(expectedMessage).isEqualTo(decryptedMessage)
+        assertThat(decryptedResult).isEqualTo(expectedMessage)
     }
 
     @Test
     fun decrypt_keyIsNotSpecified_throwsException() {
-        val encryptedMessage = "Тулезх, плу!"
         val key: Int? = null
 
-        assertThatThrownBy { caesarCipherService.encrypt(encryptedMessage, key.toString()) }
+        assertThatThrownBy { caesarCipherService.encrypt(ENCRYPTED_MESSAGE, key.toString()) }
             .isInstanceOf(IllegalArgumentException::class.java)
     }
 

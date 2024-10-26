@@ -11,16 +11,16 @@ import org.mockito.junit.jupiter.MockitoExtension
 @ExtendWith(MockitoExtension::class)
 class KeyEncoderDecoderTest {
 
+    private companion object {
+        val RAW_KEY = Pair(123456L, 7891011L)
+        const val ENCODED_KEY = "MTIzNDU2LDc4OTEwMTE="
+    }
+
     @Mock
     private lateinit var messageService: MessageService
 
     @InjectMocks
     private lateinit var keyEncoderDecoder: KeyEncoderDecoder
-
-    private companion object {
-        private val RAW_KEY = Pair(123456L, 7891011L)
-        private const val ENCODED_KEY = "MTIzNDU2LDc4OTEwMTE="
-    }
 
     @Test
     fun encodeKey() {

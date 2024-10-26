@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service
 class RsaCipherService(private val keyDecoder: KeyEncoderDecoder) : CipherService {
 
     private companion object {
-        private const val SPECIAL_CHARACTERS = " ,.!?;:'\"()[]{}<>"
-        private const val DELIMITER = '-'
+        const val SPECIAL_CHARACTERS = " ,.!?;:'\"()[]{}<>"
+        const val DELIMITER = '-'
     }
 
     /**
@@ -51,10 +51,10 @@ class RsaCipherService(private val keyDecoder: KeyEncoderDecoder) : CipherServic
      * @param n модуль ключа
      * @return Зашифрованный символ или null, если символ не может быть зашифрован
      */
-    fun encryptCharacter(char: Char, e: Long, n: Long): Long? {
+    private fun encryptCharacter(char: Char, e: Long, n: Long): Long? {
         val m = when (char) {
-            in 'А'..'Я' -> (char.code - 'А'.code + 1)
-            in 'а'..'я' -> (char.code - 'а'.code + 34)
+            in 'А'..'Я' -> (char.code - 'А'.code + 1) + 1
+            in 'а'..'я' -> (char.code - 'а'.code + 34) + 1
             else -> return null
         }
         return MathUtils.modularExponentiation(m.toLong(), e, n)
@@ -94,11 +94,11 @@ class RsaCipherService(private val keyDecoder: KeyEncoderDecoder) : CipherServic
      * @param n модуль ключа
      * @return Расшифрованный символ или null, если символ не может быть расшифрован
      */
-    fun decryptCharacter(c: Long, d: Long, n: Long): Char? {
+    private fun decryptCharacter(c: Long, d: Long, n: Long): Char? {
         val m = MathUtils.modularExponentiation(c, d, n)
         return when (m) {
-            in 1..33 -> (m + 'А'.code - 1)
-            in 34..66 -> (m + 'а'.code - 34)
+            in 1..33 -> (m + 'А'.code - 1) - 1
+            in 34..66 -> (m + 'а'.code - 34) - 1
             else -> null
         }?.toInt()?.toChar()
     }

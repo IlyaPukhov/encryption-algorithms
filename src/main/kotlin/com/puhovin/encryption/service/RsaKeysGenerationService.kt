@@ -16,12 +16,12 @@ import org.springframework.stereotype.Service
  * Этот сервис генерирует ключи RSA на основе заданных простых чисел p и q.
  */
 @Service
-class RsaKeysGeneratorService(
+class RsaKeysGenerationService(
     private val keyEncoder: KeyEncoderDecoder,
     private val messageService: MessageService,
 ) {
 
-    private val logger = LoggerFactory.getLogger(RsaKeysGeneratorService::class.java)
+    private val logger = LoggerFactory.getLogger(RsaKeysGenerationService::class.java)
 
     @Value("\${encrypt.rsa.p}")
     private var p: Long = 0

@@ -65,7 +65,7 @@ class CaesarCipherService : CipherService {
      * @param alphabet алфавит, в котором находится символ
      * @return Сдвинутый символ
      */
-    fun shiftChar(char: Char, key: Int, alphabet: String): Char {
+    private fun shiftChar(char: Char, key: Int, alphabet: String): Char {
         val index = alphabet.indexOf(char)
         val shiftedIndex = (index + key + alphabetLength) % alphabetLength
 
