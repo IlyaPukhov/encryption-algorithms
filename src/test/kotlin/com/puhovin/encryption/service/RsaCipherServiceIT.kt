@@ -13,7 +13,7 @@ class RsaCipherServiceIT(
 
     private companion object {
         const val RAW_MESSAGE = "ПУХ!"
-        const val ENCRYPTED_MESSAGE = "57832-75412-99455-!"
+        const val ENCRYPTED_MESSAGE = "82249-16069-102754-!"
     }
 
     @Test

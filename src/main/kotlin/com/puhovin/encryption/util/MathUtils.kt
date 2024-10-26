@@ -33,19 +33,17 @@ object MathUtils {
      * @return Мультипликативная обратная d по модулю phi
      */
     fun modularInverse(e: Long, phi: Long): Long {
-        // можно было использовать расширенный алгоритм Евклида, но мне показалось, проще сделать самописный
         if (e == 0L || (phi == 1L && e != 1L)) return 0
         if (phi == 1L) return 1
 
         var k = 1L
-
-        var d: Long
+        var expression: Long
         do {
-            d = (phi * k + 1)
+            expression = (phi * k + 1)
             k++
-        } while (d % e != 0L)
+        } while (expression % e != 0L)
 
-        return d / e
+        return expression / e
     }
 
     /**

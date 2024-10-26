@@ -23,6 +23,10 @@ class RsaKeysGenerationService(
 
     private val logger = LoggerFactory.getLogger(RsaKeysGenerationService::class.java)
 
+    companion object {
+        const val START_E = 65537L
+    }
+
     @Value("\${encrypt.rsa.p}")
     private var p: Long = 0
 
@@ -72,12 +76,13 @@ class RsaKeysGenerationService(
      * Поиск открытой экспоненты для публичного ключа.
      *
      * Этот метод находит открытую экспоненту на основе функции Эйлера.
+     * Начинаем с 65537 (0b10000000000000001), так как это число рекомендует Public Key Cryptography Standard #1.
      *
      * @param phi значение функции Эйлера
      * @return Открытая экспонента
      */
     private fun findPublicExponent(phi: Long): Long {
-        var e = 3L
+        var e = START_E
         while (MathUtils.gcd(e, phi) != 1L) {
             e += 2
         }

@@ -8,8 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest
 class RsaKeysGenerationServiceIT(private val keysGenerationService: RsaKeysGenerationService) {
 
     private companion object {
-        const val PUBLIC_KEY = "NywxMjM0Njc="
-        const val PRIVATE_KEY = "MTA1MjIzLDEyMzQ2Nw=="
+        const val PUBLIC_KEY = "NjU1MzcsMTIzNDY3"
+        const val PRIVATE_KEY = "OTk1OTMsMTIzNDY3"
     }
 
     @Test

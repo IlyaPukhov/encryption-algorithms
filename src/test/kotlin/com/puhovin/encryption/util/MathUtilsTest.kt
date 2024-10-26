@@ -6,12 +6,12 @@ import org.junit.jupiter.api.Test
 class MathUtilsTest {
 
     private companion object {
-        const val E = 7L
+        const val E = 65537L
         const val PHI = 122_760L
     }
 
     @Test
-    fun testGcd() {
+    fun gcd() {
         val expectedGcd = 1L
 
         val result = MathUtils.gcd(E, PHI)
@@ -20,8 +20,8 @@ class MathUtilsTest {
     }
 
     @Test
-    fun testModularInverse() {
-        val expectedD = 105_223L
+    fun modularInverse() {
+        val expectedD = 99593L
 
         val result = MathUtils.modularInverse(E, PHI)
 
@@ -29,7 +29,7 @@ class MathUtilsTest {
     }
 
     @Test
-    fun testModularExponentiation() {
+    fun modularExponentiation() {
         val base = 2L
         val exp = 199L
         val mod = 1003L
