@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController
  * REST-контроллер для шифрования и дешифрования методом RSA.
  */
 @RestController
-@RequestMapping("\${server.prefix}/rsa_cipher")
+@RequestMapping("/rsa_cipher")
 class RsaCipherController(
     private val rsaCipherService: CipherService,
     private val keysGenerationService: RsaKeysGenerationService
@@ -31,9 +31,9 @@ class RsaCipherController(
      *
      * @return Открытый ключ RSA в виде закодированной строки
      */
-    @GetMapping("/open_key")
+    @GetMapping("/public_key")
     fun publicKey(): ResponseEntity<String> {
-        return ResponseEntity.ok(keysGenerationService.getPublicKey())
+        return ResponseEntity.ok("{\"key\": \"${keysGenerationService.getPublicKey()}\"}")
     }
 
     /**
@@ -41,9 +41,10 @@ class RsaCipherController(
      *
      * @return Закрытый ключ RSA в виде закодированной строки
      */
-    @GetMapping("/close_key")
+    @GetMapping("/private_key")
     fun privateKey(): ResponseEntity<String> {
-        return ResponseEntity.ok(keysGenerationService.getPrivateKey())
+        return ResponseEntity.ok("{\"key\": \"${keysGenerationService.getPrivateKey()}\"}")
+
     }
 
     /**

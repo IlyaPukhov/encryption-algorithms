@@ -1,23 +1,64 @@
 import React, { useState } from 'react';
 import { TextField, Button, Typography, Card, CardContent, Stack } from '@mui/material';
+import { ErrorDialog } from '../components/ErrorDialog';
+import { useErrorHandler } from '../hooks/useErrorHandler';
+import { API_BASE_URL } from '../config/config';
 
 export const RSAPage: React.FC = () => {
   const [message, setMessage] = useState<string>('');
   const [publicKey, setPublicKey] = useState<string>('');
   const [privateKey, setPrivateKey] = useState<string>('');
   const [output, setOutput] = useState<string>('');
+  const { openErrorDialog, errorMessage, handleCloseErrorDialog, showError } = useErrorHandler();
 
   const handleEncrypt = async () => {
-    setOutput(`Encrypted with RSA: ${message}`);
+    const response = await fetch(`${API_BASE_URL}/api/rsa_cipher/encrypt`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: message,
+        key: publicKey,
+      }),
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      setOutput(`Зашифрованное сообщение: "${data.message}"`);
+    } else {
+      showError(data);
+    }
   };
 
   const handleDecrypt = async () => {
-    setOutput(`Decrypted with RSA: ${message}`);
+    const response = await fetch(`${API_BASE_URL}/api/rsa_cipher/decrypt`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: message,
+        key: privateKey,
+      }),
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      setOutput(`Расшифрованное сообщение: "${data.message}"`);
+    } else {
+      showError(data);
+    }
   };
 
   const handleGenerateKeys = async () => {
-    setPublicKey("Sample Public Key");
-    setPrivateKey("Sample Private Key");
+    const publicKey = await fetchKey('api/rsa_cipher/public_key');
+    setPublicKey(publicKey);
+
+    const privateKey = await fetchKey('api/rsa_cipher/private_key');
+    setPrivateKey(privateKey);
+  };
+
+  const fetchKey = async (endpoint: string) => {
+    const response = await fetch(`${API_BASE_URL}/${endpoint}`);
+    const data = await response.json();
+    return data.key;
   };
 
   return (
@@ -45,6 +86,12 @@ export const RSAPage: React.FC = () => {
             multiline
             rows={4}
             variant="outlined"
+            sx={{
+              wordBreak: 'break-word',
+              overflowWrap: 'break-word',
+              whiteSpace: 'normal',
+              color: 'text.primary',
+            }}
           />
           <TextField
             label="Открытый ключ"
@@ -72,11 +119,24 @@ export const RSAPage: React.FC = () => {
             Получить ключи
           </Button>
           <Typography variant="h6">Результат</Typography>
-          <Typography variant="body1" sx={{ wordBreak: 'break-all', color: 'text.primary' }}>
-            {output}
-          </Typography>
+          <Typography
+            variant="body1"
+            sx={{
+              wordBreak: 'break-word',
+              overflowWrap: 'break-word',
+              whiteSpace: 'normal',
+              color: 'text.primary',
+            }}
+            dangerouslySetInnerHTML={{ __html: output }}
+          />
         </Stack>
       </CardContent>
+
+      <ErrorDialog
+        open={openErrorDialog}
+        onClose={handleCloseErrorDialog}
+        errorMessage={errorMessage}
+      />
     </Card>
   );
 };

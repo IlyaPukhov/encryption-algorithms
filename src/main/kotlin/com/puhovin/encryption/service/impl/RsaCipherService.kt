@@ -14,7 +14,7 @@ class RsaCipherService(private val keyDecoder: KeyEncoderDecoder) : CipherServic
     private companion object {
         const val UPPER_START = 'А'
         const val LOWER_START = 'а'
-        const val SPECIAL_CHARACTERS = " ,.!?;:'\"()[]{}<>"
+        const val BANNED_CHARACTERS = "123456789-"
         const val DELIMITER = '-'
     }
 
@@ -30,12 +30,13 @@ class RsaCipherService(private val keyDecoder: KeyEncoderDecoder) : CipherServic
         val encryptedMessage = StringBuilder()
 
         for (char in rawMessage) {
-            if (char in SPECIAL_CHARACTERS) {
-                encryptedMessage.append(char)
-                continue
-            }
+            if (char in BANNED_CHARACTERS) continue
 
-            encryptCharacter(char, e, n)?.let { encryptedMessage.append(it).append(DELIMITER) }
+            if (char.lowercaseChar() in 'а'..'я') {
+                encryptCharacter(char, e, n)?.let { encryptedMessage.append(it).append(DELIMITER) }
+            } else {
+                encryptedMessage.append(char)
+            }
         }
 
         if (encryptedMessage.isNotEmpty() && encryptedMessage.last() == DELIMITER) {
@@ -78,10 +79,10 @@ class RsaCipherService(private val keyDecoder: KeyEncoderDecoder) : CipherServic
         for (part in encryptedParts) {
             if (part.isBlank()) continue
 
-            if (part in SPECIAL_CHARACTERS) {
-                decryptedMessage.append(part)
-            } else {
+            if (part.toLongOrNull() != null) {
                 decryptCharacter(part.toLong(), d, n)?.let { decryptedMessage.append(it) }
+            } else {
+                decryptedMessage.append(part)
             }
         }
 

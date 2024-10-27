@@ -21,7 +21,6 @@ class RsaCipherServiceIT(
         val publicKey = keysGenerationService.getPublicKey()
 
         val encryptedMessage = rsaCipherService.encrypt(RAW_MESSAGE, publicKey)
-        println(encryptedMessage)
 
         assertThat(encryptedMessage).isEqualTo(ENCRYPTED_MESSAGE)
     }

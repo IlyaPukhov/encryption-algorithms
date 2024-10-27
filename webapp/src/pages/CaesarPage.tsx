@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { TextField, Button, Typography, Card, CardContent, Stack, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { TextField, Button, Typography, Card, CardContent, Stack } from '@mui/material';
+import { ErrorDialog } from '../components/ErrorDialog';
 import { useErrorHandler } from '../hooks/useErrorHandler';
 import { useKeyChange } from '../hooks/useKeyChange';
 import { isEmptyOrNull } from '../utils/stringUtils';
+import { API_BASE_URL } from '../config/config';
 
 export const CaesarPage: React.FC = () => {
   const [message, setMessage] = useState<string>('');
@@ -11,7 +13,7 @@ export const CaesarPage: React.FC = () => {
   const { openErrorDialog, errorMessage, handleCloseErrorDialog, showError } = useErrorHandler();
 
   const handleEncrypt = async () => {
-    const response = await fetch('http://localhost:8080/api/caesar_cipher/encrypt', {
+    const response = await fetch(`${API_BASE_URL}/api/caesar_cipher/encrypt`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -29,7 +31,7 @@ export const CaesarPage: React.FC = () => {
   };
 
   const handleDecrypt = async () => {
-    const response = await fetch('http://localhost:8080/api/caesar_cipher/decrypt', {
+    const response = await fetch(`${API_BASE_URL}/api/caesar_cipher/decrypt`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -47,7 +49,7 @@ export const CaesarPage: React.FC = () => {
   };
 
   const handleBruteforceDecrypt = async () => {
-    const url = new URL('http://localhost:8080/api/caesar_cipher/hack/bruteforce');
+    const url = new URL(`${API_BASE_URL}/api/caesar_cipher/hack/bruteforce`);
 
     url.searchParams.append('isDefault', String(isEmptyOrNull(message)));
     const requestBody: any = {};
@@ -148,28 +150,11 @@ export const CaesarPage: React.FC = () => {
         </Stack>
       </CardContent>
 
-      {/* Модальное окно для обработки ошибок */}
-      <Dialog
+      <ErrorDialog
         open={openErrorDialog}
         onClose={handleCloseErrorDialog}
-      >
-        <DialogTitle sx={{ color: 'crimson' }}>Ошибка!</DialogTitle>
-        <DialogContent>
-          <DialogContentText
-            variant="body1"
-            sx={{
-              wordBreak: 'break-word',
-              overflowWrap: 'break-word',
-              whiteSpace: 'normal',
-              color: 'text.primary',
-            }}
-            dangerouslySetInnerHTML={{ __html: errorMessage }}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseErrorDialog} color="primary">Закрыть</Button>
-        </DialogActions>
-      </Dialog>
+        errorMessage={errorMessage}
+      />
     </Card>
   );
 };

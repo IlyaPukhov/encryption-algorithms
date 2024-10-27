@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController
  * REST-контроллер для шифрования и дешифрования методом Цезаря.
  */
 @RestController
-@RequestMapping("\${server.prefix}/caesar_cipher")
+@RequestMapping("/caesar_cipher")
 class CaesarCipherController(
     private val caesarCipherService: CipherService,
     private val bruteforceService: BruteforceCaesarCipherService

@@ -28,7 +28,6 @@ class KeyEncoderDecoder(private val messageService: MessageService) {
      */
     fun decodeKey(base64String: String): Pair<Long, Long> {
         val decodedText = String(Base64.getDecoder().decode(base64String), UTF_8)
-        println(Base64.getDecoder().decode(base64String))
 
         if (!isValidFormat(decodedText)) {
             throw IllegalArgumentException(messageService.getMessage("error.rsa-encrypt.key.is.invalid"))
