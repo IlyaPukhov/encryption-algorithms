@@ -1,0 +1,1 @@
+export const isEmptyOrNull = (text: string) => !text || text.trim() === '';

@@ -1,27 +1,65 @@
-import React from 'react';
-import { BrowserRouter as Router, Link, Route, Routes } from 'react-router-dom';
+import React, { useState } from 'react';
+import { AppBar, Tabs, Tab, Box, Container } from '@mui/material';
 import { CaesarPage } from './pages/CaesarPage';
 import { RSAPage } from './pages/RSAPage';
-import { AppBar, Button, Container, Toolbar, Typography } from '@mui/material';
 
 export const App: React.FC = () => {
+  const [value, setValue] = useState<number>(0);
+
+  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
+
   return (
-    <Router>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Encryption SPA
-          </Typography>
-          <Button color="inherit" component={Link} to="/caesar">Шифр Цезаря</Button>
-          <Button color="inherit" component={Link} to="/rsa">Шифр RSA</Button>
-        </Toolbar>
+    <Container
+      maxWidth="md"
+      sx={{
+        mt: 4,
+        minHeight: '100vh',
+        borderRadius: 2,
+        padding: 2
+      }}
+    >
+      <AppBar position="relative" sx={{
+        backgroundColor: '#FBFCFC',
+        boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+        borderRadius: '8px',
+        width: '80%',
+        mx: 'auto'
+      }}>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          centered
+          sx={{
+            '& .MuiTabs-indicator': {
+              backgroundColor: '#7E57C2',
+            },
+            '& .MuiTab-root': {
+              textTransform: 'none',
+              fontWeight: 'bold',
+              color: '#333',
+              fontSize: '1.2rem',
+              padding: '16px 32px',
+              borderRadius: '16px',
+              '&:hover': {
+                backgroundColor: 'rgba(126, 87, 194, 0.1)',
+              },
+              '&.Mui-selected': {
+                color: '#7E57C2',
+                backgroundColor: 'rgba(126, 87, 194, 0.2)',
+              },
+            },
+          }}
+        >
+          <Tab label="Шифр Цезаря" />
+          <Tab label="Алгоритм RSA" />
+        </Tabs>
       </AppBar>
-      <Container>
-        <Routes>
-          <Route path="/caesar" element={<CaesarPage />} />
-          <Route path="/rsa" element={<RSAPage />} />
-        </Routes>
-      </Container>
-    </Router>
+      <Box sx={{ p: 3 }}>
+        {value === 0 && <CaesarPage />}
+        {value === 1 && <RSAPage />}
+      </Box>
+    </Container>
   );
 };

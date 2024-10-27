@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, TextField, Typography } from '@mui/material';
+import { TextField, Button, Typography, Card, CardContent, Stack } from '@mui/material';
 
 export const RSAPage: React.FC = () => {
   const [message, setMessage] = useState<string>('');
@@ -8,47 +8,75 @@ export const RSAPage: React.FC = () => {
   const [output, setOutput] = useState<string>('');
 
   const handleEncrypt = async () => {
-    // Здесь будет логика шифрования RSA
     setOutput(`Encrypted with RSA: ${message}`);
   };
 
   const handleDecrypt = async () => {
-    // Здесь будет логика дешифрования RSA
     setOutput(`Decrypted with RSA: ${message}`);
   };
 
   const handleGenerateKeys = async () => {
-    // Генерация ключей RSA
     setPublicKey("Sample Public Key");
     setPrivateKey("Sample Private Key");
   };
 
   return (
-    <div>
-      <Typography variant="h4">Шифр RSA</Typography>
-      <TextField
-        label="Сообщение"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        fullWidth
-        multiline
-      />
-      <TextField
-        label="Публичный ключ"
-        value={publicKey}
-        onChange={(e) => setPublicKey(e.target.value)}
-        fullWidth
-      />
-      <TextField
-        label="Секретный ключ"
-        value={privateKey}
-        onChange={(e) => setPrivateKey(e.target.value)}
-        fullWidth
-      />
-      <Button variant="contained" onClick={handleEncrypt}>Зашифровать</Button>
-      <Button variant="contained" onClick={handleDecrypt}>Расшифровать</Button>
-      <Button variant="contained" onClick={handleGenerateKeys}>Генерация ключей</Button>
-      <Typography variant="body1">Result: {output}</Typography>
-    </div>
+    <Card
+      sx={{
+        maxWidth: 600,
+        mx: 'auto',
+        mt: 4,
+        p: 2,
+        backgroundColor: 'background.paper',
+        boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+        borderRadius: 2,
+      }}
+    >
+      <CardContent>
+        <Typography variant="h4" gutterBottom sx={{ color: 'primary.main' }}>
+          Алгоритм RSA
+        </Typography>
+        <Stack spacing={3} mt={2}>
+          <TextField
+            label="Сообщение"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            fullWidth
+            multiline
+            rows={4}
+            variant="outlined"
+          />
+          <TextField
+            label="Открытый ключ"
+            value={publicKey}
+            onChange={(e) => setPublicKey(e.target.value)}
+            fullWidth
+            variant="outlined"
+          />
+          <TextField
+            label="Закрытый ключ"
+            value={privateKey}
+            onChange={(e) => setPrivateKey(e.target.value)}
+            fullWidth
+            variant="outlined"
+          />
+          <Stack direction="row" spacing={2} justifyContent="center">
+            <Button variant="contained" color="primary" onClick={handleEncrypt}>
+              Зашифровать
+            </Button>
+            <Button variant="contained" color="secondary" onClick={handleDecrypt}>
+              Расшифровать
+            </Button>
+          </Stack>
+          <Button variant="outlined" color="success" onClick={handleGenerateKeys} fullWidth>
+            Получить ключи
+          </Button>
+          <Typography variant="h6">Результат</Typography>
+          <Typography variant="body1" sx={{ wordBreak: 'break-all', color: 'text.primary' }}>
+            {output}
+          </Typography>
+        </Stack>
+      </CardContent>
+    </Card>
   );
 };
