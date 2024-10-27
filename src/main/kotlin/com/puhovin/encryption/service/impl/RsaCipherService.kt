@@ -3,13 +3,17 @@ package com.puhovin.encryption.service.impl
 import com.puhovin.encryption.service.CipherService
 import com.puhovin.encryption.util.KeyEncoderDecoder
 import com.puhovin.encryption.util.MathUtils
+import com.puhovin.encryption.util.MessageService
 import org.springframework.stereotype.Service
 
 /**
  * Сервис для шифрования и дешифрования сообщений методом RSA.
  */
 @Service
-class RsaCipherService(private val keyDecoder: KeyEncoderDecoder) : CipherService {
+class RsaCipherService(
+    private val keyDecoder: KeyEncoderDecoder,
+    private val messageService: MessageService
+) : CipherService {
 
     private companion object {
         const val UPPER_START = 'А'
@@ -30,10 +34,10 @@ class RsaCipherService(private val keyDecoder: KeyEncoderDecoder) : CipherServic
         val encryptedMessage = StringBuilder()
 
         for (char in rawMessage) {
-            if (char in BANNED_CHARACTERS) continue
+            if (char in BANNED_CHARACTERS) throw IllegalArgumentException(messageService.getMessage("error.rsa-encrypt.message-is-invalid"))
 
             if (char.lowercaseChar() in 'а'..'я') {
-                encryptCharacter(char, e, n)?.let { encryptedMessage.append(it).append(DELIMITER) }
+                encryptCharacter(char, e, n).let { encryptedMessage.append(it).append(DELIMITER) }
             } else {
                 encryptedMessage.append(char)
             }
@@ -54,11 +58,11 @@ class RsaCipherService(private val keyDecoder: KeyEncoderDecoder) : CipherServic
      * @param n модуль ключа
      * @return Зашифрованный символ или null, если символ не может быть зашифрован
      */
-    private fun encryptCharacter(char: Char, e: Long, n: Long): Long? {
+    private fun encryptCharacter(char: Char, e: Long, n: Long): Long {
         val m = when (char) {
             in 'а'..'я' -> (char.code - LOWER_START.code + 1) + 1
             in 'А'..'Я' -> (char.code - UPPER_START.code + 34) + 1
-            else -> return null
+            else -> throw IllegalArgumentException(messageService.getMessage("error.rsa-encrypt.key-is-invalid"))
         }
         return MathUtils.modularExponentiation(m.toLong(), e, n)
     }
@@ -80,7 +84,7 @@ class RsaCipherService(private val keyDecoder: KeyEncoderDecoder) : CipherServic
             if (part.isBlank()) continue
 
             if (part.toLongOrNull() != null) {
-                decryptCharacter(part.toLong(), d, n)?.let { decryptedMessage.append(it) }
+                decryptCharacter(part.toLong(), d, n).let { decryptedMessage.append(it) }
             } else {
                 decryptedMessage.append(part)
             }
@@ -97,13 +101,13 @@ class RsaCipherService(private val keyDecoder: KeyEncoderDecoder) : CipherServic
      * @param n модуль ключа
      * @return Расшифрованный символ или null, если символ не может быть расшифрован
      */
-    private fun decryptCharacter(c: Long, d: Long, n: Long): Char? {
+    private fun decryptCharacter(c: Long, d: Long, n: Long): Char {
         val m = MathUtils.modularExponentiation(c, d, n)
         return when (m) {
             in 1..33 -> (m + LOWER_START.code - 1) - 1
             in 34..66 -> (m + UPPER_START.code - 34) - 1
-            else -> null
-        }?.toInt()?.toChar()
+            else -> throw IllegalArgumentException(messageService.getMessage("error.rsa-encrypt.key-message-is-invalid"))
+        }.toInt().toChar()
     }
 
 }

@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.validation.ObjectError
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
+import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.context.request.WebRequest
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 
@@ -50,4 +51,26 @@ class GlobalExceptionHandler(private val messageService: MessageService) : Respo
         return ResponseEntity.of(problemDetail).build()
     }
 
+    /**
+     * Обрабатывает [IllegalArgumentException], создавая объект ProblemDetail
+     * со списком сообщений об ошибках и возвращая его в качестве ответа.
+     *
+     * @param ex исключение [IllegalArgumentException]
+     * @return Ответ с объектом [ProblemDetail]
+     */
+    @ExceptionHandler(IllegalArgumentException::class)
+    fun handleIllegalArgumentException(ex: IllegalArgumentException): ResponseEntity<Any> {
+        logger.error("Произошла ошибка при выполнении запроса: ${ex.message}", ex)
+
+        val problemDetail = ProblemDetail.forStatusAndDetail(
+            HttpStatus.BAD_REQUEST,
+            messageService.getMessage("errors.400.detail")
+        )
+        problemDetail.setProperty(
+            "errors",
+            listOf(ex.message)
+        )
+
+        return ResponseEntity.of(problemDetail).build()
+    }
 }

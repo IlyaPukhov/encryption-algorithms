@@ -3,7 +3,7 @@ package com.puhovin.encryption.controller
 import com.puhovin.encryption.dto.RsaCipherRequest
 import com.puhovin.encryption.service.CipherService
 import com.puhovin.encryption.service.RsaKeysGenerationService
-import com.puhovin.encryption.validation.CipherActionValidator
+import com.puhovin.encryption.util.MessageService
 import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
@@ -21,7 +21,8 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/rsa_cipher")
 class RsaCipherController(
     private val rsaCipherService: CipherService,
-    private val keysGenerationService: RsaKeysGenerationService
+    private val keysGenerationService: RsaKeysGenerationService,
+    private val messageService: MessageService
 ) {
 
     private val logger = LoggerFactory.getLogger(RsaCipherController::class.java)
@@ -59,12 +60,12 @@ class RsaCipherController(
         @PathVariable action: String,
         @Valid @RequestBody request: RsaCipherRequest
     ): ResponseEntity<String> {
-        logger.info("Получен запрос на $action с сообщением: \"${request.message}\" и ключом: ${request.key}")
+        logger.info("Получен запрос на $action с сообщением: \"${request.message}\"")
 
         val result = when (action.lowercase()) {
             "encrypt" -> rsaCipherService.encrypt(request.message, request.key)
             "decrypt" -> rsaCipherService.decrypt(request.message, request.key)
-            else -> throw CipherActionValidator.getValidationException(this, action)
+            else -> throw IllegalArgumentException(messageService.getMessage("error.400.action.is.invalid"))
         }
 
         return ResponseEntity.ok("{\"message\": \"$result\"}")

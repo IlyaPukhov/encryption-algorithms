@@ -4,7 +4,7 @@ import com.puhovin.encryption.dto.BruteforceResult
 import com.puhovin.encryption.dto.CaesarCipherRequest
 import com.puhovin.encryption.service.BruteforceCaesarCipherService
 import com.puhovin.encryption.service.CipherService
-import com.puhovin.encryption.validation.CipherActionValidator
+import com.puhovin.encryption.util.MessageService
 import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
@@ -22,7 +22,8 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/caesar_cipher")
 class CaesarCipherController(
     private val caesarCipherService: CipherService,
-    private val bruteforceService: BruteforceCaesarCipherService
+    private val bruteforceService: BruteforceCaesarCipherService,
+    private val messageService: MessageService
 ) {
 
     private val logger = LoggerFactory.getLogger(CaesarCipherController::class.java)
@@ -39,12 +40,12 @@ class CaesarCipherController(
         @PathVariable action: String,
         @Valid @RequestBody request: CaesarCipherRequest
     ): ResponseEntity<String> {
-        logger.info("Получен запрос на $action с сообщением: \"${request.message}\" и ключом: ${request.key}")
+        logger.info("Получен запрос на $action с сообщением: \"${request.message}\"")
 
         val result = when (action.lowercase()) {
             "encrypt" -> caesarCipherService.encrypt(request.message, request.key.toString())
             "decrypt" -> caesarCipherService.decrypt(request.message, request.key.toString())
-            else -> throw CipherActionValidator.getValidationException(this, action)
+            else -> throw IllegalArgumentException(messageService.getMessage("error.400.action.is.invalid"))
         }
 
         return ResponseEntity.ok("{\"message\": \"$result\"}")
