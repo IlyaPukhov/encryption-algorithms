@@ -25,6 +25,7 @@ export const App: React.FC = () => {
         boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
         borderRadius: '8px',
         width: '80%',
+        paddingTop: 0.3,
         mx: 'auto'
       }}>
         <Tabs
