@@ -3,12 +3,14 @@ package com.puhovin.encryption.controller
 import com.puhovin.encryption.dto.RsaCipherRequest
 import com.puhovin.encryption.service.CipherService
 import com.puhovin.encryption.service.RsaKeysGenerationService
+import com.puhovin.encryption.validation.CipherActionValidator
 import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -16,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController
  * REST-контроллер для шифрования и дешифрования методом RSA.
  */
 @RestController
-@RequestMapping("/rsa_cipher")
+@RequestMapping("\${server.prefix}/rsa_cipher")
 class RsaCipherController(
     private val rsaCipherService: CipherService,
     private val keysGenerationService: RsaKeysGenerationService
@@ -47,23 +49,24 @@ class RsaCipherController(
     /**
      * Выполняет операцию шифрования или дешифрования методом RSA.
      *
-     * @param action тип операции (encode или decode)
+     * @param action тип операции (encrypt или decrypt)
      * @param request запрос, содержащий сообщение и ключ
      * @return Результат операции в виде строки
      */
     @PostMapping("/{action}")
-    fun rsaCipher(
+    fun cipher(
         @PathVariable action: String,
-        @Valid request: RsaCipherRequest
+        @Valid @RequestBody request: RsaCipherRequest
     ): ResponseEntity<String> {
-        logger.info("Получен запрос на $action с сообщением: ${request.message} и ключом: ${request.key}")
+        logger.info("Получен запрос на $action с сообщением: \"${request.message}\" и ключом: ${request.key}")
 
-        return when (action.lowercase()) {
-            "encode" -> ResponseEntity.ok(rsaCipherService.encrypt(request.message!!, request.key!!))
-            "decode" -> ResponseEntity.ok(rsaCipherService.decrypt(request.message!!, request.key!!))
-            else -> ResponseEntity.badRequest()
-                .body("Некорректное действие: $action. Допустимые значения: encode, decode")
+        val result = when (action.lowercase()) {
+            "encrypt" -> rsaCipherService.encrypt(request.message, request.key)
+            "decrypt" -> rsaCipherService.decrypt(request.message, request.key)
+            else -> throw CipherActionValidator.getValidationException(this, action)
         }
+
+        return ResponseEntity.ok("{\"message\": \"$result\"}")
     }
 
 }

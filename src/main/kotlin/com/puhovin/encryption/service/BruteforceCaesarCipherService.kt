@@ -24,7 +24,8 @@ class BruteforceCaesarCipherService(private val caesarCipherService: CaesarCiphe
      */
     fun bruteforce(): BruteforceResult {
         val defaultMessage = FileUtils.readFileToString(File("src/main/resources/static/example.txt"), UTF_8)
-        return bruteforce(defaultMessage)
+        val randomKey = (1..32).random()
+        return bruteforce(defaultMessage, randomKey)
     }
 
     /**
@@ -33,13 +34,11 @@ class BruteforceCaesarCipherService(private val caesarCipherService: CaesarCiphe
      * @param message сообщение для дешифрования
      * @return Результат дешифрования [BruteforceResult]
      */
-    fun bruteforce(message: String): BruteforceResult {
-        val randomKey = (1..32).random()
-        val encryptedMessage = caesarCipherService.encrypt(message, randomKey.toString())
-
+    fun bruteforce(message: String, key: Int): BruteforceResult {
+        val encryptedMessage = caesarCipherService.encrypt(message, key.toString())
         val bruteforceTime = measureBruteforceTime(encryptedMessage, message)
 
-        return BruteforceResult(message, randomKey, bruteforceTime, encryptedMessage)
+        return BruteforceResult(message, key, bruteforceTime)
     }
 
     /**

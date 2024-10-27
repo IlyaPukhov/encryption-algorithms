@@ -1,7 +1,6 @@
 package com.puhovin.encryption.dto
 
 import jakarta.validation.constraints.NotBlank
-import jakarta.validation.constraints.NotNull
 
 /**
  * Запрос на шифрование или расшифрование по алгоритму RSA.
@@ -14,13 +13,13 @@ data class RsaCipherRequest(
      * Сообщение для шифрования или расшифрования.
      * Не может быть null.
      */
-    @field:NotNull(message = "{error.bad-request.message.is.required}")
-    val message: String?,
+    @field:NotBlank(message = "{error.bad-request.message.is.required}")
+    val message: String,
 
     /**
      * Ключ для шифрования.
      * Не может быть пустым или отсутствовать.
      */
     @field:NotBlank(message = "{error.bad-request.key.is.required}")
-    val key: String?
+    val key: String
 )
