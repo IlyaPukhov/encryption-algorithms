@@ -56,13 +56,13 @@ class RsaCipherService(
      * @param char символ для шифрования
      * @param e открытая экспонента ключа
      * @param n модуль ключа
-     * @return Зашифрованный символ или null, если символ не может быть зашифрован
+     * @return Зашифрованный символ или исключение, если символ не может быть зашифрован
      */
     private fun encryptCharacter(char: Char, e: Long, n: Long): Long {
         val m = when (char) {
             in 'а'..'я' -> (char.code - LOWER_START.code + 1) + 1
             in 'А'..'Я' -> (char.code - UPPER_START.code + 34) + 1
-            else -> throw IllegalArgumentException(messageService.getMessage("error.rsa-encrypt.key-is-invalid"))
+            else -> throw IllegalArgumentException(messageService.getMessage("error.rsa-encrypt.message-is-invalid"))
         }
         return MathUtils.modularExponentiation(m.toLong(), e, n)
     }
@@ -99,7 +99,7 @@ class RsaCipherService(
      * @param c зашифрованный символ
      * @param d секретная экспонента ключа
      * @param n модуль ключа
-     * @return Расшифрованный символ или null, если символ не может быть расшифрован
+     * @return Расшифрованный символ или исключение, если символ не может быть расшифрован
      */
     private fun decryptCharacter(c: Long, d: Long, n: Long): Char {
         val m = MathUtils.modularExponentiation(c, d, n)
