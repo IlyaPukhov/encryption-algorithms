@@ -35,11 +35,8 @@ object MathUtils {
     fun calculateModInverse(e: Long, phi: Long): Long {
         if (e <= 0) throw IllegalArgumentException("e и φ должны быть больше нуля!")
 
-        var a = phi
-        var y = 0L
-        var x = 1L
-
-        var b = e % phi
+        var (a, b) = Pair(phi, e % phi)
+        var (x0, x1) = Pair(0L, 1L)
 
         if (b == 0L) return 0
 
@@ -49,12 +46,12 @@ object MathUtils {
 
             a = b % a
             b = t
-            val tempY = y
-            y = x - q * y
-            x = tempY
+            val tempY = x0
+            x0 = x1 - q * x0
+            x1 = tempY
         }
 
-        return if (x < 0) (x + phi) else x
+        return if (x1 < 0) (x1 + phi) else x1
     }
 
     /**
