@@ -25,7 +25,7 @@ object MathUtils {
     }
 
     /**
-     * Самописный алгоритм нахождения мультипликативной обратной по модулю.
+     * Алгоритм нахождения мультипликативной обратной по модулю на основе расширенного алгоритма Евклида.
      * Находит такое целое число d, что произведение de по модулю phi равно 1
      *
      * @param e число, для которого находится обратная
@@ -35,14 +35,25 @@ object MathUtils {
     fun modularInverse(e: Long, phi: Long): Long {
         if (e <= 0 || phi <= 1) throw IllegalArgumentException("e и φ должны быть больше нуля!")
 
-        var k = 1L
-        var expression: Long
-        do {
-            expression = (phi * k + 1)
-            k++
-        } while (expression % e != 0L)
+        var (a, b) = Pair(e, phi)
+        var (x0, x1) = Pair(0L, 1L)
 
-        return expression / e
+        while (a > 0) {
+            val q = b / a
+            val temp = a
+            a = b % a
+            b = temp
+
+            val tempX = x0
+            x0 = x1 - q * x0
+            x1 = tempX
+        }
+
+        return if (b != 1L) {
+            return -1
+        } else {
+            (x1 % phi + phi) % phi
+        }
     }
 
     /**
