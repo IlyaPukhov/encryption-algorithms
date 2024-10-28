@@ -91,6 +91,6 @@ class RsaKeysGenerationService(
      * @param phi значение функции Эйлера
      * @return Секретная экспонента
      */
-    private fun calculatePrivateD(e: Long, phi: Long) = MathUtils.calculateModInverse(e, phi)
+    private fun calculatePrivateD(e: Long, phi: Long) = MathUtils.calculateModularMultiplicativeInverse(e, phi)
 
 }

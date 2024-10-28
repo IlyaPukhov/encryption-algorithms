@@ -21,19 +21,19 @@ class MathUtilsTest {
     }
 
     @Test
-    fun modularInverse_validInput_returnsD() {
+    fun calculateModularMultiplicativeInverse_validInput_returnsD() {
         val expectedD = 99593L
 
-        val result = MathUtils.calculateModInverse(E, PHI)
+        val result = MathUtils.calculateModularMultiplicativeInverse(E, PHI)
 
         assertThat(result).isEqualTo(expectedD)
     }
 
     @Test
-    fun modularInverse_invalidInput_throwsException() {
+    fun calculateModularMultiplicativeInverse_invalidInput_throwsException() {
         val invalidE = 0L
 
-        assertThatThrownBy { MathUtils.calculateModInverse(invalidE, PHI) }
+        assertThatThrownBy { MathUtils.calculateModularMultiplicativeInverse(invalidE, PHI) }
             .isInstanceOf(IllegalArgumentException::class.java)
             .hasMessage("e и φ должны быть больше нуля!")
     }
