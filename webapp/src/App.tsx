@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { AppBar, Tabs, Tab, Box, Container } from '@mui/material';
+import { DiffieHellmanPage } from './pages/DiffieHellmanPage';
 import { CaesarPage } from './pages/CaesarPage';
 import { RSAPage } from './pages/RSAPage';
 
@@ -24,7 +25,7 @@ export const App: React.FC = () => {
         backgroundColor: '#FBFCFC',
         boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
         borderRadius: '8px',
-        width: '80%',
+        width: '110%',
         paddingTop: 0.3,
         mx: 'auto'
       }}>
@@ -53,13 +54,15 @@ export const App: React.FC = () => {
             },
           }}
         >
+          <Tab label="Протокол Диффи-Хеллмана" />
           <Tab label="Шифр Цезаря" />
           <Tab label="Алгоритм RSA" />
         </Tabs>
       </AppBar>
       <Box sx={{ p: 3 }}>
-        {value === 0 && <CaesarPage />}
-        {value === 1 && <RSAPage />}
+        {value === 0 && <DiffieHellmanPage />}
+        {value === 1 && <CaesarPage />}
+        {value === 2 && <RSAPage />}
       </Box>
     </Container>
   );
