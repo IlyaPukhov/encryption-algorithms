@@ -32,7 +32,7 @@ object MathUtils {
      * @param phi модуль
      * @return Мультипликативная обратная d по модулю phi
      */
-    fun modularInverse(e: Long, phi: Long): Long {
+    fun calculateModInverse(e: Long, phi: Long): Long {
         if (e <= 0 || phi <= 1) throw IllegalArgumentException("e и φ должны быть больше нуля!")
 
         var (a, b) = Pair(e, phi)
@@ -50,7 +50,7 @@ object MathUtils {
         }
 
         return if (b != 1L) {
-            return -1
+            -1
         } else {
             (x1 % phi + phi) % phi
         }
