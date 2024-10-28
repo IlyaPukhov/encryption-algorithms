@@ -33,27 +33,28 @@ object MathUtils {
      * @return Мультипликативная обратная d по модулю phi
      */
     fun calculateModInverse(e: Long, phi: Long): Long {
-        if (e <= 0 || phi <= 1) throw IllegalArgumentException("e и φ должны быть больше нуля!")
+        if (e <= 0) throw IllegalArgumentException("e и φ должны быть больше нуля!")
 
-        var (a, b) = Pair(e, phi)
-        var (x0, x1) = Pair(0L, 1L)
+        var a = phi
+        var y = 0L
+        var x = 1L
 
-        while (a > 0) {
+        var b = e % phi
+
+        if (b == 0L) return 0
+
+        while (b > 1) {
             val q = b / a
-            val temp = a
+            val t = a
+
             a = b % a
-            b = temp
-
-            val tempX = x0
-            x0 = x1 - q * x0
-            x1 = tempX
+            b = t
+            val tempY = y
+            y = x - q * y
+            x = tempY
         }
 
-        return if (b != 1L) {
-            -1
-        } else {
-            (x1 % phi + phi) % phi
-        }
+        return if (x < 0) (x + phi) else x
     }
 
     /**

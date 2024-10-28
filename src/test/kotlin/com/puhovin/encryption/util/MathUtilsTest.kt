@@ -24,16 +24,16 @@ class MathUtilsTest {
     fun modularInverse_validInput_returnsD() {
         val expectedD = 99593L
 
-        val result = MathUtils.modularInverse(E, PHI)
+        val result = MathUtils.calculateModInverse(E, PHI)
 
         assertThat(result).isEqualTo(expectedD)
     }
 
     @Test
     fun modularInverse_invalidInput_throwsException() {
-        val invalidPhi = 1L
+        val invalidE = 0L
 
-        assertThatThrownBy { MathUtils.modularInverse(E, invalidPhi) }
+        assertThatThrownBy { MathUtils.calculateModInverse(invalidE, PHI) }
             .isInstanceOf(IllegalArgumentException::class.java)
             .hasMessage("e и φ должны быть больше нуля!")
     }
