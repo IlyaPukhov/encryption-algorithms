@@ -1,6 +1,6 @@
 package com.puhovin.encryption.service.impl
 
-import com.puhovin.encryption.service.DiffieHellmanService
+import com.puhovin.encryption.service.DiffieHellmanProtocolService
 import com.puhovin.encryption.util.MathUtils
 import jakarta.annotation.PostConstruct
 import kotlin.properties.Delegates
@@ -15,21 +15,21 @@ import org.springframework.stereotype.Service
  * а также для вычисления общего секретного ключа.
  */
 @Service
-class DiffieHellmanServiceImpl : DiffieHellmanService {
+class DiffieHellmanProtocolServiceImpl : DiffieHellmanProtocolService {
 
-    private val logger = LoggerFactory.getLogger(DiffieHellmanServiceImpl::class.java)
+    private val logger = LoggerFactory.getLogger(DiffieHellmanProtocolServiceImpl::class.java)
 
     // Минимальное значение диапазона для генерации простых чисел
-    @Value("\${encrypt.diffie-hellman.min}")
+    @Value("\${encrypt.diffie-hellman.min:100}")
     private val minNumber = 0L
 
     // Максимальное значение диапазона для генерации простых чисел
-    @Value("\${encrypt.diffie-hellman.max}")
+    @Value("\${encrypt.diffie-hellman.max:200}")
     private val maxNumber = 0L
 
     // Простые числа w и n, используемые в протоколе Диффи-Хеллмана
-    private var w by Delegates.notNull<Long>()
-    private var n by Delegates.notNull<Long>()
+    override var w by Delegates.notNull<Long>()
+    override var n by Delegates.notNull<Long>()
 
     /**
      * Инициализация сервиса.

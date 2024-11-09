@@ -1,6 +1,9 @@
 package com.puhovin.encryption.service
 
-interface DiffieHellmanService {
+interface DiffieHellmanProtocolService {
+
+    var w: Long
+    var n: Long
 
     fun generatePrivateKey(): Long
 
