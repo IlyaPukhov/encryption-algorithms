@@ -2,6 +2,8 @@ package com.puhovin.encryption.service.impl
 
 import com.puhovin.encryption.service.DiffieHellmanService
 import com.puhovin.encryption.util.MathUtils
+import jakarta.annotation.PostConstruct
+import kotlin.properties.Delegates
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -17,11 +19,57 @@ class DiffieHellmanServiceImpl : DiffieHellmanService {
 
     private val logger = LoggerFactory.getLogger(DiffieHellmanServiceImpl::class.java)
 
+    // Минимальное значение диапазона для генерации простых чисел
     @Value("\${encrypt.diffie-hellman.min}")
     private val minNumber = 0L
 
+    // Максимальное значение диапазона для генерации простых чисел
     @Value("\${encrypt.diffie-hellman.max}")
     private val maxNumber = 0L
+
+    // Простые числа w и n, используемые в протоколе Диффи-Хеллмана
+    private var w by Delegates.notNull<Long>()
+    private var n by Delegates.notNull<Long>()
+
+    /**
+     * Инициализация сервиса.
+     * Генерирует простые числа w и n.
+     */
+    @PostConstruct
+    fun init() {
+        w = generatePrime()
+        n = generatePrime()
+    }
+
+    /**
+     * Генерация закрытого ключа.
+     *
+     * @return Закрытый ключ.
+     */
+    override fun generatePrivateKey(): Long {
+        return generatePrime()
+    }
+
+    /**
+     * Генерация открытого ключа на основе закрытого ключа.
+     *
+     * @param privateKey Закрытый ключ.
+     * @return Открытый ключ.
+     */
+    override fun generatePublicKey(privateKey: Long): Long {
+        return MathUtils.modularExponentiation(w, privateKey, n)
+    }
+
+    /**
+     * Вычисление общего секретного ключа на основе открытого ключа другой стороны и собственного закрытого ключа.
+     *
+     * @param anotherPublicKey Открытый ключ другой стороны.
+     * @param privateKey Собственный закрытый ключ.
+     * @return Общий секретный ключ.
+     */
+    override fun generateSharedSecret(anotherPublicKey: Long, privateKey: Long): Long {
+        return MathUtils.modularExponentiation(anotherPublicKey, privateKey, n)
+    }
 
     /**
      * Генерирует простое число в диапазоне от [minNumber] до [maxNumber].
@@ -30,7 +78,7 @@ class DiffieHellmanServiceImpl : DiffieHellmanService {
      *
      * @return Сгенерированное простое число.
      */
-    override fun generatePrime(): Long {
+    private fun generatePrime(): Long {
         var candidate = (minNumber..maxNumber).random() or 1L
 
         while (!MathUtils.isPrime(candidate)) {
@@ -41,15 +89,4 @@ class DiffieHellmanServiceImpl : DiffieHellmanService {
         return candidate
     }
 
-    override fun generatePrivateKey(): Long {
-        TODO("Not yet implemented")
-    }
-
-    override fun generatePublicKey(privateKey: Long): Long {
-        TODO("Not yet implemented")
-    }
-
-    override fun generateSharedSecret(privateKey: Long, publicKey: Long): Long {
-        TODO("Not yet implemented")
-    }
 }
