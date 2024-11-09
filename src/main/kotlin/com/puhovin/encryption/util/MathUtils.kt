@@ -56,7 +56,7 @@ object MathUtils {
     }
 
     /**
-     * Алгоритм возведения в степень по модулю.
+     * Алгоритм быстрого возведения в степень по модулю.
      *
      * @param base основание
      * @param exp показатель степени
@@ -79,6 +79,28 @@ object MathUtils {
         }
 
         return result
+    }
+
+
+    /**
+     * Проверяет, является ли заданное число простым.
+     *
+     * Простое число - это натуральное число, большее 1, которое не имеет положительных делителей, кроме 1 и самого себя.
+     *
+     * @param number число, которое нужно проверить на простоту
+     * @return true, если число простое, иначе false
+     */
+    fun isPrime(number: Long): Boolean {
+        if (number <= 1) return false
+        if (number <= 3) return true
+        if (number % 2 == 0L || number % 3 == 0L) return false
+
+        var i = 5L
+        while (i * i <= number) {
+            if (number % i == 0L) return false
+            i += 2
+        }
+        return true
     }
 
 }
