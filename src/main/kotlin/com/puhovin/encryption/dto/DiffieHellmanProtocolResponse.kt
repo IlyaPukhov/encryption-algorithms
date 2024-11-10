@@ -1,5 +1,7 @@
 package com.puhovin.encryption.dto
 
+import java.math.BigInteger
+
 /**
  * Класс, представляющий ответ на запрос по протоколу Диффи-Хеллмана.
  *
@@ -12,11 +14,11 @@ package com.puhovin.encryption.dto
  * @property kAB Общий секретный ключ, вычисленный сторонами A и B.
  */
 data class DiffieHellmanProtocolResponse(
-    val w: Long,
-    val n: Long,
-    val xA: Long,
-    val xB: Long,
-    val yA: Long,
-    val yB: Long,
-    val kAB: Long
+    val w: BigInteger,
+    val n: BigInteger,
+    val xA: BigInteger,
+    val xB: BigInteger,
+    val yA: BigInteger,
+    val yB: BigInteger,
+    val kAB: BigInteger
 )

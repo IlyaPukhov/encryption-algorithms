@@ -1,5 +1,6 @@
 package com.puhovin.encryption.config
 
+import java.math.BigInteger
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 /**
@@ -10,6 +11,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties
  */
 @ConfigurationProperties(prefix = "encrypt.rsa")
 data class RsaProperties(
-    var p: Int?,
-    var q: Int?
+    var p: BigInteger?,
+    var q: BigInteger?
 )
