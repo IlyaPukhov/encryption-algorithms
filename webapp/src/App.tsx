@@ -54,9 +54,9 @@ export const App: React.FC = () => {
             },
           }}
         >
-          <Tab label="Протокол Диффи-Хеллмана" />
           <Tab label="Шифр Цезаря" />
           <Tab label="Алгоритм RSA" />
+          <Tab label="Протокол Диффи-Хеллмана" />
         </Tabs>
       </AppBar>
       <Box sx={{ p: 3 }}>

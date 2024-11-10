@@ -40,22 +40,28 @@ export const DiffieHellmanPage: React.FC = () => {
         backgroundColor: 'background.paper',
         boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
         borderRadius: 2,
+        minHeight: '500px',
       }}
     >
       <CardContent>
         <Typography variant="h4" gutterBottom sx={{ color: 'primary.main' }}>
-          Протокол Диффи-Хеллмана (выработка общего секретного ключа)
+          Протокол Диффи-Хеллмана
         </Typography>
         <Stack spacing={3} mt={2}>
           <Stack direction="row" spacing={2} justifyContent="center">
             <Button variant="contained" color="primary" onClick={handleGenerateSharedSecret} disabled={loading}>
-              Вычислить
+              Вычислить общий секретный ключ
             </Button>
           </Stack>
           <Typography variant="h6">Результат</Typography>
           {loading ? (
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-              <CircularProgress/>
+            <Box sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '250px',
+            }}>
+              <CircularProgress />
             </Box>
           ) : error ? (
             <Typography variant="body1" sx={{ color: 'error.main' }}>
@@ -69,21 +75,22 @@ export const DiffieHellmanPage: React.FC = () => {
                   <Typography variant="body1">Параметр n: <strong>{output.n}</strong></Typography>
                 </Box>
 
-                <Stack spacing={1}>
-                  <Typography variant="h6">Сторона A</Typography>
-                  <Typography variant="body1">Секретный ключ A (xA): <strong>{output.xA}</strong></Typography>
-                  <Typography variant="body1">Открытый ключ A (yA): <strong>{output.yA}</strong></Typography>
-                </Stack>
-
-                <Stack spacing={1}>
-                  <Typography variant="h6">Сторона B</Typography>
-                  <Typography variant="body1">Секретный ключ B (xB): <strong>{output.xB}</strong></Typography>
-                  <Typography variant="body1">Открытый ключ B (yB): <strong>{output.yB}</strong></Typography>
+                <Stack direction="row" spacing={8} justifyContent="center">
+                  <Stack spacing={1}>
+                    <Typography variant="h6">Сторона A</Typography>
+                    <Typography variant="body1">Секретный ключ (xA): &nbsp;<strong>{output.xa}</strong></Typography>
+                    <Typography variant="body1">Открытый ключ (yA): &nbsp;&nbsp;<strong>{output.ya}</strong></Typography>
+                  </Stack>
+                  <Stack spacing={1} sx={{ textAlign: 'right' }}>
+                    <Typography variant="h6">Сторона B</Typography>
+                    <Typography variant="body1">Секретный ключ (xB): &nbsp;<strong>{output.xb}</strong></Typography>
+                    <Typography variant="body1">Открытый ключ (yB): &nbsp;&nbsp;<strong>{output.yb}</strong></Typography>
+                  </Stack>
                 </Stack>
 
                 <Box sx={{ textAlign: 'center', mt: 3 }}>
                   <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
-                    Общий секретный ключ (kAB): <strong>{output.kAB}</strong>
+                    Общий секретный ключ (kAB): <strong>{output.kab}</strong>
                   </Typography>
                 </Box>
               </Stack>

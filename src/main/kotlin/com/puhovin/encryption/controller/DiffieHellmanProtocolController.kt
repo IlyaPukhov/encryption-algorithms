@@ -6,6 +6,7 @@ import com.puhovin.encryption.util.MessageService
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.reactor.mono
+import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -24,6 +25,8 @@ class DiffieHellmanProtocolController(
     private val protocolService: DiffieHellmanProtocolService,
     private val messageService: MessageService
 ) {
+
+    private val logger = LoggerFactory.getLogger(DiffieHellmanProtocolController::class.java)
 
     /**
      * Получение общего секретного ключа.
@@ -57,17 +60,18 @@ class DiffieHellmanProtocolController(
             throw IllegalArgumentException(messageService.getMessage("error.diffie-hellman-protocol.shared-secrets-is-not-equal"))
         }
 
-        return@mono ResponseEntity.ok(
-            DiffieHellmanProtocolResponse(
-                protocolService.w,
-                protocolService.n,
-                xA,
-                yA,
-                xB,
-                yB,
-                sharedSecretA
-            )
+        val response = DiffieHellmanProtocolResponse(
+            protocolService.w,
+            protocolService.n,
+            xA,
+            yA,
+            xB,
+            yB,
+            sharedSecretA
         )
+        logger.info("Результат протокола Диффи-Хеллмана: $response")
+
+        return@mono ResponseEntity.ok(response)
     }
 
 }

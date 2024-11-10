@@ -39,6 +39,8 @@ class DiffieHellmanProtocolServiceImpl : DiffieHellmanProtocolService {
     fun init() {
         w = generatePrime()
         n = generatePrime()
+
+        logger.info("Сгенерированы параметры w=$w и n=$n")
     }
 
     /**
@@ -85,7 +87,6 @@ class DiffieHellmanProtocolServiceImpl : DiffieHellmanProtocolService {
             candidate += 2
             if (candidate % 3 == 0L) candidate += 2
         }
-        logger.info("Сгенерировано простое число X=$candidate")
         return candidate
     }
 
