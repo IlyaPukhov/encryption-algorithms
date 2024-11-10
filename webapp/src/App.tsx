@@ -5,7 +5,7 @@ import { CaesarPage } from './pages/CaesarPage';
 import { RSAPage } from './pages/RSAPage';
 
 export const App: React.FC = () => {
-  const [value, setValue] = useState<number>(2);
+  const [value, setValue] = useState<number>(0);
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
