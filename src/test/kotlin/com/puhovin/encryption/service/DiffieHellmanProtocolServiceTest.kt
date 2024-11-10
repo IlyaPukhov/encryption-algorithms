@@ -1,32 +1,29 @@
 package com.puhovin.encryption.service
 
 import com.puhovin.encryption.service.impl.DiffieHellmanProtocolServiceImpl
-import com.puhovin.encryption.util.MathUtils
-import kotlin.random.Random
+import java.math.BigInteger
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class DiffieHellmanProtocolServiceTest {
 
-    private val minNumber: Long = 100
-    private val maxNumber: Long = 200
+    private val diffieHellmanProtocolService = DiffieHellmanProtocolServiceImpl()
 
-    private lateinit var diffieHellmanProtocolService: DiffieHellmanProtocolServiceImpl
+    private companion object {
+        const val CERTAINTY = 100
+    }
 
     @BeforeEach
     fun setUp() {
-        diffieHellmanProtocolService = DiffieHellmanProtocolServiceImpl().apply {
-            w = Random.nextLong(minNumber, maxNumber)
-            n = Random.nextLong(minNumber, maxNumber)
-        }
+        diffieHellmanProtocolService.init()
     }
 
     @Test
     fun generatePrivateKey_returnsPrimeNumber() {
         val privateKey = diffieHellmanProtocolService.generatePrivateKey()
 
-        assertThat(MathUtils.isPrime(privateKey)).isTrue
+        assertThat(privateKey.isProbablePrime(CERTAINTY)).isTrue
     }
 
     @Test
@@ -34,7 +31,7 @@ class DiffieHellmanProtocolServiceTest {
         val privateKey = diffieHellmanProtocolService.generatePrivateKey()
         val publicKey = diffieHellmanProtocolService.generatePublicKey(privateKey)
 
-        assertThat(publicKey).isGreaterThan(0)
+        assertThat(publicKey).isGreaterThan(BigInteger.ZERO)
     }
 
     @Test
@@ -44,15 +41,13 @@ class DiffieHellmanProtocolServiceTest {
 
         val sharedSecret = diffieHellmanProtocolService.generateSharedSecret(otherPartyPublicKey, privateKey)
 
-        assertThat(sharedSecret).isGreaterThan(0)
+        assertThat(sharedSecret).isGreaterThan(BigInteger.ZERO)
     }
 
     @Test
     fun init() {
-        diffieHellmanProtocolService.init()
-
-        assertThat(MathUtils.isPrime(diffieHellmanProtocolService.w)).isTrue
-        assertThat(MathUtils.isPrime(diffieHellmanProtocolService.n)).isTrue
+        assertThat(diffieHellmanProtocolService.w.isProbablePrime(CERTAINTY)).isTrue
+        assertThat(diffieHellmanProtocolService.n.isProbablePrime(CERTAINTY)).isTrue
     }
 
 }

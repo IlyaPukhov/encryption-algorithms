@@ -4,6 +4,7 @@ import com.puhovin.encryption.service.CipherService
 import com.puhovin.encryption.util.KeyEncoderDecoder
 import com.puhovin.encryption.util.MathUtils
 import com.puhovin.encryption.util.MessageService
+import java.math.BigInteger
 import org.springframework.stereotype.Service
 
 /**
@@ -58,13 +59,13 @@ class RsaCipherService(
      * @param n модуль ключа
      * @return Зашифрованный символ или исключение, если символ не может быть зашифрован
      */
-    private fun encryptCharacter(char: Char, e: Long, n: Long): Long {
+    private fun encryptCharacter(char: Char, e: BigInteger, n: BigInteger): BigInteger {
         val m = when (char) {
             in 'а'..'я' -> (char.code - LOWER_START.code + 1) + 1
             in 'А'..'Я' -> (char.code - UPPER_START.code + 34) + 1
             else -> throw IllegalArgumentException(messageService.getMessage("error.rsa-encrypt.message-is-invalid"))
         }
-        return MathUtils.modularExponentiation(m.toLong(), e, n)
+        return MathUtils.modularExponentiation(m.toBigInteger(), e, n)
     }
 
     /**
@@ -83,8 +84,8 @@ class RsaCipherService(
         for (part in encryptedParts) {
             if (part.isBlank()) continue
 
-            if (part.toLongOrNull() != null) {
-                decryptCharacter(part.toLong(), d, n).let { decryptedMessage.append(it) }
+            if (part.toBigIntegerOrNull() != null) {
+                decryptCharacter(part.toBigInteger(), d, n).let { decryptedMessage.append(it) }
             } else {
                 decryptedMessage.append(part)
             }
@@ -101,11 +102,11 @@ class RsaCipherService(
      * @param n модуль ключа
      * @return Расшифрованный символ или исключение, если символ не может быть расшифрован
      */
-    private fun decryptCharacter(c: Long, d: Long, n: Long): Char {
+    private fun decryptCharacter(c: BigInteger, d: BigInteger, n: BigInteger): Char {
         val m = MathUtils.modularExponentiation(c, d, n)
-        return when (m) {
-            in 1..33 -> (m + LOWER_START.code - 1) - 1
-            in 34..66 -> (m + UPPER_START.code - 34) - 1
+        return when (m.toInt()) {
+            in 1..33 -> (m.toInt() + LOWER_START.code - 1) - 1
+            in 34..66 -> (m.toInt() + UPPER_START.code - 34) - 1
             else -> throw IllegalArgumentException(messageService.getMessage("error.rsa-encrypt.key-message-is-invalid"))
         }.toInt().toChar()
     }

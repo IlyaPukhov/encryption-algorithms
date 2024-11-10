@@ -1,13 +1,15 @@
 package com.puhovin.encryption.service
 
+import java.math.BigInteger
+
 interface DiffieHellmanProtocolService {
 
-    var w: Long
-    var n: Long
+    var w: BigInteger
+    var n: BigInteger
 
-    fun generatePrivateKey(): Long
+    fun generatePrivateKey(): BigInteger
 
-    fun generatePublicKey(privateKey: Long): Long
+    fun generatePublicKey(privateKey: BigInteger): BigInteger
 
-    fun generateSharedSecret(anotherPublicKey: Long, privateKey: Long): Long
+    fun generateSharedSecret(anotherPublicKey: BigInteger, privateKey: BigInteger): BigInteger
 }

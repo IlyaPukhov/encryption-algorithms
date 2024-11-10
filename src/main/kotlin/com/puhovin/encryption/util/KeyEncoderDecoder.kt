@@ -1,5 +1,6 @@
 package com.puhovin.encryption.util
 
+import java.math.BigInteger
 import java.util.Base64
 import kotlin.text.Charsets.UTF_8
 import org.springframework.stereotype.Service
@@ -16,7 +17,7 @@ class KeyEncoderDecoder(private val messageService: MessageService) {
      * @param key пара чисел, представляющая ключ
      * @return Закодированная Base64-строка
      */
-    fun encodeKey(key: Pair<Long, Long>): String {
+    fun encodeKey(key: Pair<BigInteger, BigInteger>): String {
         return Base64.getEncoder().encodeToString("${key.first},${key.second}".toByteArray())
     }
 
@@ -26,14 +27,14 @@ class KeyEncoderDecoder(private val messageService: MessageService) {
      * @param base64String закодированная Base64-строка
      * @return Пара чисел, представляющая ключ
      */
-    fun decodeKey(base64String: String): Pair<Long, Long> {
+    fun decodeKey(base64String: String): Pair<BigInteger, BigInteger> {
         val decodedText = String(Base64.getDecoder().decode(base64String), UTF_8)
 
         if (!isValidFormat(decodedText)) {
             throw IllegalArgumentException(messageService.getMessage("error.rsa-encrypt.key.is.invalid"))
         }
 
-        val (first, second) = decodedText.split(",").map { it.toLong() }
+        val (first, second) = decodedText.split(",").map { it.toBigInteger() }
         return Pair(first, second)
     }
 

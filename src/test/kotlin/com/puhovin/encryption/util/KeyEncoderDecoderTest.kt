@@ -12,7 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 class KeyEncoderDecoderTest {
 
     private companion object {
-        val RAW_KEY = Pair(123456L, 7891011L)
+        val RAW_KEY = Pair(123456.toBigInteger(), 7891011.toBigInteger())
         const val ENCODED_KEY = "MTIzNDU2LDc4OTEwMTE="
     }
 

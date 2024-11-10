@@ -1,9 +1,9 @@
 package com.puhovin.encryption.service
 
 import com.puhovin.encryption.util.KeyEncoderDecoder
-import com.puhovin.encryption.util.MathUtils
 import com.puhovin.encryption.util.MessageService
 import jakarta.annotation.PostConstruct
+import java.math.BigInteger
 import kotlin.properties.Delegates
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -19,19 +19,19 @@ class RsaKeysGenerationService(
     private val messageService: MessageService,
 ) {
 
-    companion object {
-        const val START_E = 65537L
+    private companion object {
+        val START_E: BigInteger = 65537.toBigInteger()
     }
 
     @Value("\${encrypt.rsa.p}")
-    private var p: Long = 0
+    private var p: BigInteger = BigInteger.ZERO
 
     @Value("\${encrypt.rsa.q}")
-    private var q: Long = 0
+    private var q: BigInteger = BigInteger.ZERO
 
-    private var n by Delegates.notNull<Long>()
-    private var e by Delegates.notNull<Long>()
-    private var d by Delegates.notNull<Long>()
+    private var n by Delegates.notNull<BigInteger>()
+    private var e by Delegates.notNull<BigInteger>()
+    private var d by Delegates.notNull<BigInteger>()
 
     /**
      * Инициализация сервиса.
@@ -41,12 +41,12 @@ class RsaKeysGenerationService(
      */
     @PostConstruct
     fun init() {
-        if (p == 0L || q == 0L) {
+        if (p == BigInteger.ZERO || q == BigInteger.ZERO) {
             throw IllegalStateException(messageService.getMessage("error.rsa-encrypt.pq-is-not-initialized"))
         }
 
         n = p * q
-        val phi = (p - 1) * (q - 1)
+        val phi = (p - BigInteger.ONE) * (q - BigInteger.ONE)
         e = findPublicExponent(phi)
         d = calculatePrivateD(e, phi)
     }
@@ -74,10 +74,10 @@ class RsaKeysGenerationService(
      * @param phi значение функции Эйлера
      * @return Открытая экспонента
      */
-    private fun findPublicExponent(phi: Long): Long {
+    private fun findPublicExponent(phi: BigInteger): BigInteger {
         var e = START_E
-        while (MathUtils.gcd(e, phi) != 1L) {
-            e += 2
+        while (e.gcd(phi) != BigInteger.ONE) {
+            e += BigInteger.TWO
         }
         return e
     }
@@ -91,6 +91,6 @@ class RsaKeysGenerationService(
      * @param phi значение функции Эйлера
      * @return Секретная экспонента
      */
-    private fun calculatePrivateD(e: Long, phi: Long) = MathUtils.calculateModularMultiplicativeInverse(e, phi)
+    private fun calculatePrivateD(e: BigInteger, phi: BigInteger) = e.modInverse(phi)
 
 }
