@@ -1,11 +1,24 @@
 import React, { useState } from 'react';
 import { Box, Button, Card, CardContent, CircularProgress, Stack, Typography } from '@mui/material';
 import { API_BASE_URL } from '../config/config';
+import { BigTextDisplay } from '../components/BigTextDisplay';
 
 export const DiffieHellmanPage: React.FC = () => {
   const [output, setOutput] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
+
+  function parseBigIntegers(textData: string) {
+    const modifiedTextData = textData.replace(/(\d{16,})/g, '"$1"');
+
+    return JSON.parse(modifiedTextData, (_key, value) => {
+      if (typeof value === 'string' && /^\d+$/.test(value)) {
+        return BigInt(value);
+      }
+      return value;
+    });
+  }
+
 
   const handleGenerateSharedSecret = async () => {
     setLoading(true);
@@ -21,8 +34,8 @@ export const DiffieHellmanPage: React.FC = () => {
         throw new Error('Ошибка при получении данных');
       }
 
-      const data = await response.json();
-      setOutput(data);
+      const data = await response.text();
+      setOutput(parseBigIntegers(data));
     } catch (err) {
       setError('Ошибка при вычислении общего секретного ключа.');
     } finally {
@@ -71,26 +84,27 @@ export const DiffieHellmanPage: React.FC = () => {
             output && (
               <Stack spacing={3} mt={2}>
                 <Box sx={{ textAlign: 'center' }}>
-                  <Typography variant="body1">Параметр w: <strong>{output.w}</strong></Typography>
-                  <Typography variant="body1">Параметр n: <strong>{output.n}</strong></Typography>
+                  <Typography variant="body1">Параметр w: &nbsp;<BigTextDisplay variant="body1" value={output.w} /></Typography>
+                  <Typography variant="body1">Параметр n: &nbsp;<BigTextDisplay variant="body1" value={output.n} /></Typography>
                 </Box>
 
-                <Stack direction="row" spacing={8} justifyContent="center">
-                  <Stack spacing={1}>
+                <Stack direction="row" spacing={2} justifyContent="center" sx={{ padding: "16px" }}>
+                  <Stack spacing={1} sx={{ paddingLeft: "20px" }}>
                     <Typography variant="h6">Сторона A</Typography>
-                    <Typography variant="body1">Секретный ключ (xA): &nbsp;<strong>{output.xa}</strong></Typography>
-                    <Typography variant="body1">Открытый ключ (yA): &nbsp;&nbsp;<strong>{output.ya}</strong></Typography>
+                    <Typography variant="body1">Секретный ключ (xA): <BigTextDisplay variant="body1" value={output.xa} /></Typography>
+                    <Typography variant="body1">Открытый ключ (yA): <BigTextDisplay variant="body1" value={output.ya} /></Typography>
                   </Stack>
-                  <Stack spacing={1} sx={{ textAlign: 'right' }}>
+                  <Stack spacing={1} sx={{ textAlign: 'right', paddingRight: "20px" }}>
                     <Typography variant="h6">Сторона B</Typography>
-                    <Typography variant="body1">Секретный ключ (xB): &nbsp;<strong>{output.xb}</strong></Typography>
-                    <Typography variant="body1">Открытый ключ (yB): &nbsp;&nbsp;<strong>{output.yb}</strong></Typography>
+                    <Typography variant="body1">Секретный ключ (xB): <BigTextDisplay variant="body1" value={output.xb} /></Typography>
+                    <Typography variant="body1">Открытый ключ (yB): <BigTextDisplay variant="body1" value={output.yb} /></Typography>
                   </Stack>
                 </Stack>
 
+
                 <Box sx={{ textAlign: 'center', mt: 3 }}>
                   <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
-                    Общий секретный ключ (kAB): <strong>{output.kab}</strong>
+                    Общий секретный ключ (kAB): <BigTextDisplay variant="h5" value={output.kab} />
                   </Typography>
                 </Box>
               </Stack>

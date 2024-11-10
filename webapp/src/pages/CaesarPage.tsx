@@ -72,7 +72,6 @@ export const CaesarPage: React.FC = () => {
         Исходное сообщение: "${data.raw_message}"
       `);
     } else {
-      console.log(data)
       showError(data);
     }
   };
