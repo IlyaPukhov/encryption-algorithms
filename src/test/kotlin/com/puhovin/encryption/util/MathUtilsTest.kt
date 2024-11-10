@@ -2,7 +2,6 @@ package com.puhovin.encryption.util
 
 import java.math.BigInteger
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 
 class MathUtilsTest {
@@ -19,24 +18,6 @@ class MathUtilsTest {
         val result = E.gcd(PHI)
 
         assertThat(result).isEqualTo(expectedGcd)
-    }
-
-    @Test
-    fun calculateModularMultiplicativeInverse_validInput_returnsD() {
-        val expectedD = 99593.toBigInteger()
-
-        val result = MathUtils.calculateModularMultiplicativeInverse(E, PHI)
-
-        assertThat(result).isEqualTo(expectedD)
-    }
-
-    @Test
-    fun calculateModularMultiplicativeInverse_invalidInput_throwsException() {
-        val invalidE = BigInteger.ZERO
-
-        assertThatThrownBy { MathUtils.calculateModularMultiplicativeInverse(invalidE, PHI) }
-            .isInstanceOf(IllegalArgumentException::class.java)
-            .hasMessage("e и φ должны быть больше нуля!")
     }
 
     @Test

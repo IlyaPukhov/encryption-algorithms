@@ -1,7 +1,6 @@
 package com.puhovin.encryption.service
 
 import com.puhovin.encryption.util.KeyEncoderDecoder
-import com.puhovin.encryption.util.MathUtils
 import com.puhovin.encryption.util.MessageService
 import jakarta.annotation.PostConstruct
 import java.math.BigInteger
@@ -92,7 +91,6 @@ class RsaKeysGenerationService(
      * @param phi значение функции Эйлера
      * @return Секретная экспонента
      */
-    private fun calculatePrivateD(e: BigInteger, phi: BigInteger) =
-        MathUtils.calculateModularMultiplicativeInverse(e, phi)
+    private fun calculatePrivateD(e: BigInteger, phi: BigInteger) = e.modInverse(phi)
 
 }
