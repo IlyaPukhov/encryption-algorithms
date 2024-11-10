@@ -7,7 +7,7 @@ package com.puhovin.encryption.dto
  * @property key ключ, использованный для шифрования сообщения
  * @property bruteforceTime время, затраченное на перебор
  */
-data class BruteforceResult(
+data class BruteforceResponse(
     val rawMessage: String,
     val key: Int,
     val bruteforceTime: Long

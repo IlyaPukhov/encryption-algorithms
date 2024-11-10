@@ -50,4 +50,24 @@ class MathUtilsTest {
         assertThat(result).isEqualTo(expectedResult)
     }
 
+    @Test
+    fun isPrime_returnsFalse() {
+        val number = 247_000_000L
+        val expectedResult = false
+
+        val result = MathUtils.isPrime(number)
+
+        assertThat(result).isEqualTo(expectedResult)
+    }
+
+    @Test
+    fun isPrime_returnsTrue() {
+        val number = 997L
+        val expectedResult = true
+
+        val result = MathUtils.isPrime(number)
+
+        assertThat(result).isEqualTo(expectedResult)
+    }
+
 }

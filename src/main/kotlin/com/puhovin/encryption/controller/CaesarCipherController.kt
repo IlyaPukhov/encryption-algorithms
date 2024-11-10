@@ -1,6 +1,6 @@
 package com.puhovin.encryption.controller
 
-import com.puhovin.encryption.dto.BruteforceResult
+import com.puhovin.encryption.dto.BruteforceResponse
 import com.puhovin.encryption.dto.CaesarCipherRequest
 import com.puhovin.encryption.service.BruteforceCaesarCipherService
 import com.puhovin.encryption.service.CipherService
@@ -56,13 +56,13 @@ class CaesarCipherController(
      *
      * @param isDefault использовать ли сообщение по умолчанию (необязательно, по умолчанию true)
      * @param request запрос, содержащий сообщение и ключ (необязательно)
-     * @return [ResponseEntity], содержащий результат дешифрования [BruteforceResult]
+     * @return [ResponseEntity], содержащий результат дешифрования [BruteforceResponse]
      */
     @PostMapping("/hack/bruteforce")
     fun bruteforce(
         @RequestParam(required = false, defaultValue = "true") isDefault: Boolean,
         @Valid @RequestBody(required = false) request: CaesarCipherRequest?
-    ): ResponseEntity<BruteforceResult> {
+    ): ResponseEntity<BruteforceResponse> {
         val result = if (isDefault) {
             bruteforceService.bruteforce()
         } else {

@@ -1,79 +1,32 @@
 import React, { useState } from 'react';
-import { TextField, Button, Typography, Card, CardContent, Stack } from '@mui/material';
-import { ErrorDialog } from '../components/ErrorDialog';
-import { useErrorHandler } from '../hooks/useErrorHandler';
-import { useKeyChange } from '../hooks/useKeyChange';
-import { isEmptyOrNull } from '../utils/stringUtils';
+import { Box, Button, Card, CardContent, CircularProgress, Stack, Typography } from '@mui/material';
 import { API_BASE_URL } from '../config/config';
 
 export const DiffieHellmanPage: React.FC = () => {
-  const [message, setMessage] = useState<string>('');
-  const [output, setOutput] = useState<string>('');
-  const { key, handleKeyChange } = useKeyChange(1);
-  const { openErrorDialog, errorMessage, handleCloseErrorDialog, showError } = useErrorHandler();
+  const [output, setOutput] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
 
-  const handleEncrypt = async () => {
-    const response = await fetch(`${API_BASE_URL}/api/caesar_cipher/encrypt`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        message: message,
-        key: key,
-      }),
-    });
+  const handleGenerateSharedSecret = async () => {
+    setLoading(true);
+    setError('');
 
-    const data = await response.json();
-    if (response.ok) {
-      setOutput(`Зашифрованное сообщение: "${data.message}"`);
-    } else {
-      showError(data);
-    }
-  };
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/diffie_hellman`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
 
-  const handleDecrypt = async () => {
-    const response = await fetch(`${API_BASE_URL}/api/caesar_cipher/decrypt`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        message: message,
-        key: key,
-      }),
-    });
+      if (!response.ok) {
+        throw new Error('Ошибка при получении данных');
+      }
 
-    const data = await response.json();
-    if (response.ok) {
-      setOutput(`Расшифрованное сообщение: "${data.message}"`);
-    } else {
-      showError(data);
-    }
-  };
-
-  const handleBruteforceDecrypt = async () => {
-    const url = new URL(`${API_BASE_URL}/api/caesar_cipher/hack/bruteforce`);
-
-    url.searchParams.append('isDefault', String(isEmptyOrNull(message)));
-    const requestBody: any = {};
-    if (!isEmptyOrNull(message)) {
-      requestBody.message = message;
-      requestBody.key = String(key)
-    }
-
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: Object.keys(requestBody).length ? JSON.stringify(requestBody) : undefined,
-    });
-
-    const data = await response.json();
-    if (response.ok) {
-      setOutput(`
-        Время перебора: ${data.bruteforce_time} мс <br />
-        Ключ: ${data.key} <br />
-        Исходное сообщение: "${data.raw_message}"
-      `);
-    } else {
-      console.log(data)
-      showError(data);
+      const data = await response.json();
+      setOutput(data);
+    } catch (err) {
+      setError('Ошибка при вычислении общего секретного ключа.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -87,74 +40,64 @@ export const DiffieHellmanPage: React.FC = () => {
         backgroundColor: 'background.paper',
         boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
         borderRadius: 2,
+        minHeight: '500px',
       }}
     >
       <CardContent>
         <Typography variant="h4" gutterBottom sx={{ color: 'primary.main' }}>
-          Шифр Цезаря
+          Протокол Диффи-Хеллмана
         </Typography>
         <Stack spacing={3} mt={2}>
-          <TextField
-            label="Сообщение"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            fullWidth
-            multiline
-            rows={4}
-            variant="outlined"
-            sx={{
-              wordBreak: 'break-word',
-              overflowWrap: 'break-word',
-              whiteSpace: 'normal',
-              color: 'text.primary',
-            }}
-          />
-          <TextField
-            label="Ключ"
-            type="number"
-            value={key}
-            onChange={handleKeyChange}
-            fullWidth
-            variant="outlined"
-            sx={{
-              '& input[type=number]::-webkit-inner-spin-button, & input[type=number]::-webkit-outer-spin-button': {
-                display: 'none',
-              },
-              '& input[type=number]': {
-                MozAppearance: 'textfield',
-              },
-            }}
-          />
           <Stack direction="row" spacing={2} justifyContent="center">
-            <Button variant="contained" color="primary" onClick={handleEncrypt}>
-              Зашифровать
-            </Button>
-            <Button variant="contained" color="secondary" onClick={handleDecrypt}>
-              Расшифровать
+            <Button variant="contained" color="primary" onClick={handleGenerateSharedSecret} disabled={loading}>
+              Вычислить общий секретный ключ
             </Button>
           </Stack>
-          <Button variant="outlined" color="warning" onClick={handleBruteforceDecrypt} fullWidth>
-            Дешифровать перебором
-          </Button>
           <Typography variant="h6">Результат</Typography>
-          <Typography
-            variant="body1"
-            sx={{
-              wordBreak: 'break-word',
-              overflowWrap: 'break-word',
-              whiteSpace: 'normal',
-              color: 'text.primary',
-            }}
-            dangerouslySetInnerHTML={{ __html: output }}
-          />
+          {loading ? (
+            <Box sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '250px',
+            }}>
+              <CircularProgress />
+            </Box>
+          ) : error ? (
+            <Typography variant="body1" sx={{ color: 'error.main' }}>
+              {error}
+            </Typography>
+          ) : (
+            output && (
+              <Stack spacing={3} mt={2}>
+                <Box sx={{ textAlign: 'center' }}>
+                  <Typography variant="body1">Параметр w: <strong>{output.w}</strong></Typography>
+                  <Typography variant="body1">Параметр n: <strong>{output.n}</strong></Typography>
+                </Box>
+
+                <Stack direction="row" spacing={8} justifyContent="center">
+                  <Stack spacing={1}>
+                    <Typography variant="h6">Сторона A</Typography>
+                    <Typography variant="body1">Секретный ключ (xA): &nbsp;<strong>{output.xa}</strong></Typography>
+                    <Typography variant="body1">Открытый ключ (yA): &nbsp;&nbsp;<strong>{output.ya}</strong></Typography>
+                  </Stack>
+                  <Stack spacing={1} sx={{ textAlign: 'right' }}>
+                    <Typography variant="h6">Сторона B</Typography>
+                    <Typography variant="body1">Секретный ключ (xB): &nbsp;<strong>{output.xb}</strong></Typography>
+                    <Typography variant="body1">Открытый ключ (yB): &nbsp;&nbsp;<strong>{output.yb}</strong></Typography>
+                  </Stack>
+                </Stack>
+
+                <Box sx={{ textAlign: 'center', mt: 3 }}>
+                  <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+                    Общий секретный ключ (kAB): <strong>{output.kab}</strong>
+                  </Typography>
+                </Box>
+              </Stack>
+            )
+          )}
         </Stack>
       </CardContent>
-
-      <ErrorDialog
-        open={openErrorDialog}
-        onClose={handleCloseErrorDialog}
-        errorMessage={errorMessage}
-      />
     </Card>
   );
 };

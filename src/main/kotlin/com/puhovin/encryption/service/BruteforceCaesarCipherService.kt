@@ -1,6 +1,6 @@
 package com.puhovin.encryption.service
 
-import com.puhovin.encryption.dto.BruteforceResult
+import com.puhovin.encryption.dto.BruteforceResponse
 import com.puhovin.encryption.service.impl.CaesarCipherService
 import java.io.File
 import kotlin.system.measureTimeMillis
@@ -20,9 +20,9 @@ class BruteforceCaesarCipherService(private val caesarCipherService: CaesarCiphe
     /**
      * Использует сообщение по умолчанию из файла example.txt.
      *
-     * @return Результат дешифрования [BruteforceResult]
+     * @return Результат дешифрования [BruteforceResponse]
      */
-    fun bruteforce(): BruteforceResult {
+    fun bruteforce(): BruteforceResponse {
         val defaultMessage = FileUtils.readFileToString(File("src/main/resources/static/example.txt"), UTF_8)
         val randomKey = (1..32).random()
         return bruteforce(defaultMessage, randomKey)
@@ -32,13 +32,13 @@ class BruteforceCaesarCipherService(private val caesarCipherService: CaesarCiphe
      * Шифрует заданное сообщение методом Цезаря, а затем дешифрует с помощью перебора ключей.
      *
      * @param message сообщение для дешифрования
-     * @return Результат дешифрования [BruteforceResult]
+     * @return Результат дешифрования [BruteforceResponse]
      */
-    fun bruteforce(message: String, key: Int): BruteforceResult {
+    fun bruteforce(message: String, key: Int): BruteforceResponse {
         val encryptedMessage = caesarCipherService.encrypt(message, key.toString())
         val bruteforceTime = measureBruteforceTime(encryptedMessage, message)
 
-        return BruteforceResult(message, key, bruteforceTime)
+        return BruteforceResponse(message, key, bruteforceTime)
     }
 
     /**

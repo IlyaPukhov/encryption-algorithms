@@ -5,7 +5,7 @@ import { CaesarPage } from './pages/CaesarPage';
 import { RSAPage } from './pages/RSAPage';
 
 export const App: React.FC = () => {
-  const [value, setValue] = useState<number>(0);
+  const [value, setValue] = useState<number>(2);
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -54,15 +54,15 @@ export const App: React.FC = () => {
             },
           }}
         >
-          <Tab label="Протокол Диффи-Хеллмана" />
           <Tab label="Шифр Цезаря" />
           <Tab label="Алгоритм RSA" />
+          <Tab label="Протокол Диффи-Хеллмана" />
         </Tabs>
       </AppBar>
       <Box sx={{ p: 3 }}>
-        {value === 0 && <DiffieHellmanPage />}
-        {value === 1 && <CaesarPage />}
-        {value === 2 && <RSAPage />}
+        {value === 0 && <CaesarPage />}
+        {value === 1 && <RSAPage />}
+        {value === 2 && <DiffieHellmanPage />}
       </Box>
     </Container>
   );
